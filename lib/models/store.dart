@@ -49,7 +49,7 @@ class Store{
     this._name = object["name"];
     this._description = object["description"];
     this._picture = object["picture"];
-    this._firstPhone = object["firsPhone"];
+    this._firstPhone = object["firstPhone"];
     this._secondPhone = object["secondPhone"];
   }
 }
