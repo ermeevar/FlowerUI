@@ -6,7 +6,7 @@ class Shop{
   int _storeId;
   Store _store;
 
-  Shop(this._id, this._address, this._storeId, this._store);
+  Shop(this._address, this._storeId, this._store);
 
   int get id => _id;
   String get address => _address;
