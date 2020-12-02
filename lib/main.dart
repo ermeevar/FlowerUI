@@ -1,7 +1,8 @@
+import 'package:flower_ui/screens/store.main_menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(StoreMainMenu());
 }
 
 class MyApp extends StatelessWidget {
