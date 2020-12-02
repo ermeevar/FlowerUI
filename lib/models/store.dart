@@ -3,17 +3,17 @@ class Store{
   String _name;
   String _description;
   List<int> _picture;
-  BigInt _firstPhone;
-  BigInt _secondPhone;
+  String _firstPhone;
+  String _secondPhone;
 
-  Store(this._id, this._name, this._description, this._picture, this._firstPhone, this._secondPhone);
+  Store(this._name, this._description, this._firstPhone);
 
   int get id => _id;
   String get name => _name;
   String get description => _description;
   List<int> get picture => _picture;
-  BigInt get firstPhone => _firstPhone;
-  BigInt get secondPhone => _secondPhone;
+  String get firstPhone => _firstPhone;
+  String get secondPhone => _secondPhone;
 
   set name(String name){
     _name = name;
@@ -24,10 +24,10 @@ class Store{
   set picture(List<int> picture){
     _picture = picture;
   }
-  set firstPhone(BigInt firstPhone){
+  set firstPhone(String firstPhone){
     _firstPhone = firstPhone;
   }
-  set secondPhone(BigInt secondPhone){
+  set secondPhone(String secondPhone){
     _secondPhone = secondPhone;
   }
 
