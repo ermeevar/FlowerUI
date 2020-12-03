@@ -11,6 +11,15 @@ class StoreMainMenu extends StatelessWidget {
     new Shop("г. Казань, Солнечный город 1, 2 этаж", 0)
   ];
 
+  List<Widget> _viewPages = [
+    new Container(
+      color: Colors.black,
+    ),
+    new Container(
+      color: Colors.red,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +38,7 @@ class StoreMainMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     new CircleAvatar(
-                      radius: 60,
+                      radius: 70,
                       backgroundImage: NetworkImage(
                           'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
                       backgroundColor: Colors.transparent,
@@ -78,20 +87,25 @@ class StoreMainMenu extends StatelessWidget {
               ),
               new Expanded(
                   child: ListView.builder(
-                itemCount: _shops.length,
-                itemBuilder: (context, index) {
-                  return new Container(
-                      height: 50,
-                      child: new Text(
-                        _shops[index].address,
-                        style: new TextStyle(
-                            fontFamily: "Arial",
-                            fontSize: 15,
-                            color: Colors.black,
-                            decoration: TextDecoration.none),
-                      ));
-                },
-              ))
+                    itemCount: _shops.length,
+                    itemBuilder: (context, index) {
+                      return new Container(
+                          height: 50,
+                          child: new Text(
+                            _shops[index].address,
+                            style: new TextStyle(
+                                fontFamily: "Arial",
+                                fontSize: 15,
+                                color: Colors.black,
+                                decoration: TextDecoration.none),
+                          ));
+                    },
+              )),
+              new Expanded(
+                child: new PageView(
+                  children: _viewPages,
+                ),
+              )
             ])));
   }
 }
