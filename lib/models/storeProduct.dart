@@ -11,8 +11,7 @@ class StoreProduct{
   Category _category;
   Store _store;
 
-  StoreProduct(this._id, this._name, this._picture, this._cost,
-   this._categoryId, this._storeId, this._category, this._store);
+  StoreProduct(this._name, this._cost);
 
   int get id => _id;
   String get name => _name;
