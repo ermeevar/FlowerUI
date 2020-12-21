@@ -1,16 +1,12 @@
 import 'package:flower_ui/models/shop.dart';
 import 'package:flower_ui/models/store.dart';
-import 'package:flower_ui/screens/widgets/store.information.dart';
+import 'package:flower_ui/screens/store.widgets/store.information.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../models/storeProduct.dart';
+import '../../models/storeProduct.dart';
 
 class StoreMainMenu extends StatelessWidget {
   StoreMainMenu({Key key}) : super(key: key);
-
-  Store _store =
-      new Store("Букет столицы", "Свежие цветочки", "8(900)800-40-50");
   List<Shop> _shops = [
     new Shop("г. Казань, Мавлекаева 67", 0),
     new Shop("г. Казань, Проспект Победы 30", 0),
@@ -40,7 +36,7 @@ class StoreMainMenu extends StatelessWidget {
           color: Colors.white,
           alignment: Alignment.center,
           child: Column(children: <Widget>[
-            StoreInformation(_store),
+            StoreInformation(),
             new Expanded(
                 child: new Padding(
                   padding: EdgeInsets.all(20),
