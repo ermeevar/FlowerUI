@@ -9,9 +9,9 @@ class StoreInformation extends StatefulWidget{
 class StoreInformationState extends State<StoreInformation>
     with SingleTickerProviderStateMixin{
   Store store = new Store("Букет столицы", "Свежие цветочки", "8(900)800-40-50");
-  TextFormField name;
-  TextFormField firstPhone;
-  TextFormField secondFhone;
+  String name;
+  String firstPhone;
+  String secondFhone;
 
   bool _isTab = false;
 
@@ -23,7 +23,27 @@ class StoreInformationState extends State<StoreInformation>
 
   void _save(){
     setState(() {
-      store.name = name.initialValue;
+      store.name = name;
+      store.firstPhone = firstPhone;
+      store.secondPhone = secondFhone;
+    });
+  }
+
+  void _changeName(String name){
+    setState(() {
+      this.name=name;
+    });
+  }
+
+  void _changeFirstPhone(String firstPhone){
+    setState(() {
+      this.firstPhone=firstPhone;
+    });
+  }
+
+  void _changeSecondPhone(String secondPhone){
+    setState(() {
+      this.secondFhone=secondPhone;
     });
   }
 
@@ -142,45 +162,54 @@ class StoreInformationState extends State<StoreInformation>
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
             backgroundColor: Colors.transparent,
           ),
-          name = TextFormField(
-              cursorColor: Colors.white,
-              key: Key("name"),
-              initialValue: store.name != null ? store.name : "",
-              style: new TextStyle(
-                  height: 2,
-                  fontSize: 15.0,
-                  fontFamily: "Montserrat",
-                  color: Colors.white,
-                  decoration: TextDecoration.none),
-              decoration: InputDecoration(
-                labelText: "Наименование",
-                focusColor: Colors.white,
-              )
+          TextFormField(
+            onChanged: (name){
+              _changeName(name);
+            },
+            cursorColor: Colors.white,
+            key: Key("name"),
+            initialValue: store.name != null ? store.name : "",
+            style: new TextStyle(
+                height: 2,
+                fontSize: 15.0,
+                fontFamily: "Montserrat",
+                color: Colors.white,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              labelText: "Наименование",
+              focusColor: Colors.white,
+            )
           ),
-          firstPhone = TextFormField(
-              cursorColor: Colors.white,
-              initialValue: store.firstPhone != null ? store.firstPhone : "",
-              style: new TextStyle(
-                  height: 2,
-                  fontSize: 15.0,
-                  fontFamily: "Montserrat",
-                  color: Colors.white,
-                  decoration: TextDecoration.none),
-              decoration: InputDecoration(
-                labelText: "Основной телефон",
-                focusColor: Colors.white,
-              )
+          TextFormField(
+            onChanged: (firstPhone){
+              _changeFirstPhone(firstPhone);
+            },
+            cursorColor: Colors.white,
+            initialValue: store.firstPhone != null ? store.firstPhone : "",
+            style: new TextStyle(
+                height: 2,
+                fontSize: 15.0,
+                fontFamily: "Montserrat",
+                color: Colors.white,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
+              labelText: "Основной телефон",
+              focusColor: Colors.white,
+            )
           ),
-          secondFhone = TextFormField(
-              cursorColor: Colors.white,
-              initialValue: store.secondPhone != null ? store.secondPhone : "",
-              style: new TextStyle(
-                  height: 2,
-                  fontSize: 15.0,
-                  fontFamily: "Montserrat",
-                  color: Colors.white,
-                  decoration: TextDecoration.none),
-              decoration: InputDecoration(
+          TextFormField(
+            onChanged: (secondPhone){
+              _changeSecondPhone(secondPhone);
+            },
+            cursorColor: Colors.white,
+            initialValue: store.secondPhone != null ? store.secondPhone : "",
+            style: new TextStyle(
+                height: 2,
+                fontSize: 15.0,
+                fontFamily: "Montserrat",
+                color: Colors.white,
+                decoration: TextDecoration.none),
+            decoration: InputDecoration(
                 labelText: "Дополнительный телефон",
                 focusColor: Colors.white,
               )
@@ -203,8 +232,8 @@ class StoreInformationState extends State<StoreInformation>
                 ),
                 new FlatButton(
                     onPressed: (){
-                      _save();
                       _taped();
+                      _save();
                     },
                     padding: EdgeInsets.zero,
                     child: Container(

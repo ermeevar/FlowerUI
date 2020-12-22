@@ -7,13 +7,14 @@ class StoreMainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Container(
-          color: Colors.white,
-          alignment: Alignment.center,
-          child: Column(children: <Widget>[
-            StoreInformation(),
-            StoreContent(),
-          ])),
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Column(children: <Widget>[
+          StoreInformation(),
+          StoreContent(),
+        ])),
     );
   }
 }

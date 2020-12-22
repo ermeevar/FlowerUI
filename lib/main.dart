@@ -11,7 +11,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primaryColor: Colors.white
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: Color.fromRGBO(130, 147, 153, 1),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30))
+          )
+        ),
+        primaryColor: Colors.white,
+        backgroundColor: Colors.white
       ),
       home: StoreMainMenu(),
     );

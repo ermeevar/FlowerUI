@@ -1,5 +1,5 @@
 import 'package:flower_ui/models/shop.dart';
-import 'package:flower_ui/models/storeProduct.dart';
+import 'package:flower_ui/models/store.product.dart';
 
 class ShopProduct{
   int _id;
