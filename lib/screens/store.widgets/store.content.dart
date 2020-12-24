@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:flower_ui/models/category.dart';
 import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/shop.product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../models/store.product.dart';
@@ -10,36 +14,31 @@ class StoreContent extends StatefulWidget {
 
 class StoreContentState extends State<StoreContent>
     with TickerProviderStateMixin {
-  String address;
+  String _shopAddress;
+  String _productName;
+  String _productCost;
+  String _productCategory;
   List<Shop> _shops = [
     new Shop("г. Казань, Мавлекаева 67", 0),
     new Shop(
         "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
         0),
-    new Shop(
-        "г. Казань, Солнечный город 1, 2 этаж",
-        0),
+    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
     new Shop("г. Казань, Мавлекаева 67", 0),
     new Shop(
         "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
         0),
-    new Shop(
-        "г. Казань, Солнечный город 1, 2 этаж",
-        0),
+    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
     new Shop("г. Казань, Мавлекаева 67", 0),
     new Shop(
         "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
         0),
-    new Shop(
-        "г. Казань, Солнечный город 1, 2 этаж",
-        0),
+    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
     new Shop("г. Казань, Мавлекаева 67", 0),
     new Shop(
         "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
         0),
-    new Shop(
-        "г. Казань, Солнечный город 1, 2 этаж",
-        0),
+    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
   ];
   List<StoreProduct> _storeProducts = [
     new StoreProduct("Ландыш", 137.80),
@@ -51,16 +50,60 @@ class StoreContentState extends State<StoreContent>
     new StoreProduct("Много роз", 137.80),
     new StoreProduct("Роза роза роза", 137.80),
   ];
+  List<Category> _categories=[
+    Category("Цветок"),
+    Category("Зелень"),
+    Category("Украшение"),
+    Category("Открытка"),
+  ];
 
-  void _addShop(Shop shop){
+  List<DropdownMenuItem> _buildItems(List<Category> list){
+    List<DropdownMenuItem> newList=List();
+
+    for(var item in list){
+      newList.add(DropdownMenuItem(child: Text(item.name), value: item.name));
+    }
+
+    return newList;
+  }
+  void _addShop(Shop shop) {
     setState(() {
       _shops.add(shop);
     });
   }
-
-  void  _changeAddress(String addressName){
+  void _deleteShop(Shop shop) {
     setState(() {
-      this.address=addressName;
+      _shops.remove(shop);
+    });
+  }
+  void _addStoreProduct(StoreProduct product) {
+    setState(() {
+      _storeProducts.add(product);
+    });
+  }
+  void _deleteStoreProduct(StoreProduct product) {
+    setState(() {
+      _storeProducts.remove(product);
+    });
+  }
+  void _changeShopAddress(String addressName) {
+    setState(() {
+      this._shopAddress = addressName;
+    });
+  }
+  void _changeProductName(String productName) {
+    setState(() {
+      this._productName = productName;
+    });
+  }
+  void _changeProductCost(String productCost) {
+    setState(() {
+      this._productCost = productCost;
+    });
+  }
+  void _changeProductCategory(String productCategory) {
+    setState(() {
+      this._productCategory = productCategory;
     });
   }
 
@@ -73,7 +116,7 @@ class StoreContentState extends State<StoreContent>
           appBar: AppBar(
             elevation: 0,
             primary: false,
-            toolbarHeight: 20,
+            toolbarHeight: 30,
             bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.all(10),
@@ -102,12 +145,12 @@ class StoreContentState extends State<StoreContent>
             children: [
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: _shopsContent(context),
               ),
               Container(
                 color: Colors.white,
-                padding: EdgeInsets.all(10),
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: _productsContent(context),
               ),
             ],
@@ -118,11 +161,28 @@ class StoreContentState extends State<StoreContent>
   }
 
   Widget _shopsContent(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Expanded(child: ListView.separated(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Color.fromRGBO(130, 147, 153, 1),
+        label: Text("Добавить магазин",
+            style: new TextStyle(
+                fontSize: 15.0,
+                fontFamily: "MontserratBold",
+                color: Colors.white,
+                decoration: TextDecoration.none)),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => _shopBottomSheet(context),
+          );
+        },
+        icon: Icon(Icons.add),
+      ),
+      body: Container(
+          color: Colors.white,
+          child: Expanded(
+           child: ListView.separated(
             separatorBuilder: (context, index) => Divider(
               color: Color.fromRGBO(110, 53, 76, 1),
               thickness: 1.5,
@@ -130,164 +190,185 @@ class StoreContentState extends State<StoreContent>
             ),
             itemCount: _shops.length,
             itemBuilder: (context, index) {
-              return new Container(
-                  padding: EdgeInsets.all(10),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      new Expanded(
-                        child: Text(
-                          _shops[index].address,
-                          style: new TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 15,
-                              color: Color.fromRGBO(55, 50, 52, 1),
-                              decoration: TextDecoration.none),
+              return ListTile(
+                contentPadding: EdgeInsets.symmetric(vertical: 10),
+                title: Text(
+                  _shops[index].address,
+                  style: new TextStyle(
+                      fontFamily: "Montserrat",
+                      fontSize: 15,
+                      color: Color.fromRGBO(55, 50, 52, 1),
+                      decoration: TextDecoration.none),
+                ),
+                trailing: PopupMenuButton(
+                  icon: Icon(Icons.more_vert, color: Color.fromRGBO(110, 53, 76, 1)),
+                  color: Color.fromRGBO(110, 53, 76, 1),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                        Icon(
+                          Icons.edit,
+                          color: Colors.white,
                         ),
-                      ),
-                      new FlatButton(
-                          onPressed: () {},
-                          padding: EdgeInsets.all(0),
-                          child: new Text(
-                            "Войти",
-                            style: new TextStyle(
-                                fontSize: 15.0,
-                                fontFamily: "MontserratBold",
-                                color: Color.fromRGBO(110, 53, 76, 1),
-                                decoration: TextDecoration.none),
-                          )),
-                    ],
-                  ));
-            },
-          )),
-          FlatButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isScrollControlled: true,
-                builder: (context) => _addShopBottomSheet(context),
+                        FlatButton(
+                            onPressed: null,
+                            child: Text(
+                              "Изменить",
+                              style: new TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.none),
+                            ))
+                      ],
+                    )),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.white),
+                          FlatButton(
+                            onPressed: (){
+                              _deleteShop(_shops[index]);
+                              Navigator.pop(context);
+                            },
+                            child: Text(
+                              "Удалить",
+                              style: new TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.none),
+                            ))
+                      ],
+                    )),
+                  ],
+                ),
               );
             },
-            padding: EdgeInsets.zero,
-            child: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    color: Color.fromRGBO(130, 147, 153, 1),
-                    borderRadius: BorderRadius.all(Radius.circular(20))
-                ),
-                child: new Text(
-                    "Добавить магазин",
-                    style: new TextStyle(
-                        fontSize: 15.0,
-                        fontFamily: "MontserratBold",
-                        color: Colors.white,
-                        decoration: TextDecoration.none)),
-              )
-          ),
-        ],
-      ),
+          ))),
     );
   }
 
   Widget _productsContent(BuildContext context) {
-    return Expanded(child: ListView.separated(
-      separatorBuilder: (context, index) => Divider(
-        color: Color.fromRGBO(110, 53, 76, 1),
-        thickness: 1.5,
-        height: 0,
-      ),
-      itemCount: _storeProducts.length,
-      itemBuilder: (context, index) {
-        return new Container(
-          padding: EdgeInsets.only(top:10, bottom: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  new CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                        'https://upload.wikimedia.org/wikipedia/commons/d/db/Rosa_Peer_Gynt_1.jpg'),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  Expanded(child: Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10),
-                          child: Expanded(
-                            child: Text(_storeProducts[index].name,
-                                //overflow: TextOverflow.clip,
-                                style: new TextStyle(
-                                    fontSize: 20.0,
-                                    fontFamily: "MontserratBold",
-                                    color: Color.fromRGBO(55, 50, 52, 1),
-                                    fontWeight: FontWeight.normal,
-                                    decoration: TextDecoration.none)),
+    return Scaffold(
+      body: Container(
+          color: Colors.white,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              color: Color.fromRGBO(110, 53, 76, 1),
+              thickness: 1.5,
+              height: 0,
+            ),
+            itemCount: _storeProducts.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(
+                          'https://upload.wikimedia.org/wikipedia/commons/d/db/Rosa_Peer_Gynt_1.jpg'),
+                      backgroundColor: Colors.transparent,
+                    ),
+                    Expanded(
+                      child: Padding(
+                      padding: EdgeInsets.only(left: 20),
+                        child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _storeProducts[index].name,
+                            style: new TextStyle(
+                                fontFamily: "Montserrat",
+                                fontSize: 20,
+                                color: Color.fromRGBO(55, 50, 52, 1),
+                                decoration: TextDecoration.none),
                           ),
-                        ),
-                        Text(
+                          Text(
                             _storeProducts[index].cost.toString() + " руб.",
                             style: new TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.normal,
+                                height: 2,
                                 fontFamily: "Montserrat",
+                                fontSize: 15,
                                 color: Color.fromRGBO(55, 50, 52, 1),
-                                decoration: TextDecoration.none)),
-                      ],
-                    ),
-                  )),
-                ],
-              )),
-              Column(
-                children: [
-                  Container(
-                      alignment: Alignment.topRight,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Color.fromRGBO(110, 53, 76, 1),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            bottomLeft: Radius.circular(10),
-                          )
+                                decoration: TextDecoration.none),
+                          ),
+                        ],
                       ),
-                      child:  Expanded(child: Text("Цветок",
-                          style: new TextStyle(
-                              fontSize: 20.0,
-                              fontFamily: "Montserrat",
+                    )),
+                    PopupMenuButton(
+                      icon: Icon(Icons.more_vert, color: Color.fromRGBO(110, 53, 76, 1)),
+                      color: Color.fromRGBO(110, 53, 76, 1),
+                      itemBuilder: (context) => [
+                        PopupMenuItem(
+                            child: Row(
+                          children: [
+                            Icon(
+                              Icons.edit,
                               color: Colors.white,
-                              fontWeight: FontWeight.normal,
-                              decoration: TextDecoration.none)))
-                  ),
-                  new FlatButton(
-                      onPressed: () {},
-                      padding: EdgeInsets.all(0),
-                      child: new Text(
-                        "Изменить",
-                        style: new TextStyle(
-                            height: 1,
-                            fontSize: 15.0,
-                            fontFamily: "MontserratBold",
-                            color: Color.fromRGBO(110, 53, 76, 1),
-                            decoration: TextDecoration.none),
-                      )),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    ));
+                            ),
+                            FlatButton(
+                                onPressed: null,
+                                child: Text(
+                                  "Изменить",
+                                  style: new TextStyle(
+                                      fontFamily: "Montserrat",
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none),
+                                ))
+                          ],
+                        )),
+                        PopupMenuItem(
+                          child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.white),
+                            FlatButton(
+                              onPressed: (){
+                              _deleteStoreProduct(_storeProducts[index]);
+                              Navigator.pop(context);
+                              },
+                              child: Text(
+                                "Удалить",
+                                style: new TextStyle(
+                                    fontFamily: "Montserrat",
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    decoration: TextDecoration.none),
+                              ))
+                          ],
+                        )),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            },
+          )),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Color.fromRGBO(130, 147, 153, 1),
+        label: Text("Добавить товар",
+            style: new TextStyle(
+                fontSize: 15.0,
+                fontFamily: "MontserratBold",
+                color: Colors.white,
+                decoration: TextDecoration.none)),
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) => _productBottomSheet(context),
+          );
+        },
+        icon: Icon(Icons.add),
+      ),
+    );
   }
 
-  Widget _addShopBottomSheet(context){
+  Widget _shopBottomSheet(context) {
     return Container(
       child: Padding(
         padding: MediaQuery.of(context).viewInsets,
@@ -296,47 +377,134 @@ class StoreContentState extends State<StoreContent>
           child: Wrap(
             children: [
               TextFormField(
-                cursorColor: Colors.white,
-                onChanged: (string){
-                  _changeAddress(string);
-                },
+                  cursorColor: Colors.white,
+                  onChanged: (string) {
+                    _changeShopAddress(string);
+                  },
+                  style: new TextStyle(
+                      height: 2,
+                      fontSize: 15.0,
+                      fontFamily: "Montserrat",
+                      color: Colors.white,
+                      decoration: TextDecoration.none),
+                  decoration: InputDecoration(
+                    labelText: "Адрес магазина",
+                    focusColor: Colors.white,
+                  )),
+              new Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 30),
+                  child: FlatButton(
+                      onPressed: () {
+                        Shop shop = Shop(this._shopAddress, 0);
+                        _addShop(shop);
+                        Navigator.pop(context);
+                      },
+                      padding: EdgeInsets.zero,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: new Text("Сохранить",
+                            style: new TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: "MontserratBold",
+                                color: Color.fromRGBO(130, 147, 153, 1),
+                                decoration: TextDecoration.none)),
+                      )))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _productBottomSheet(context) {
+    return Container(
+      child: Padding(
+        padding: MediaQuery.of(context).viewInsets,
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Wrap(
+            children: [
+              TextFormField(
+                  cursorColor: Colors.white,
+                  onChanged: (string) {
+                    _changeProductName(string);
+                  },
+                  style: new TextStyle(
+                      height: 2,
+                      fontSize: 15.0,
+                      fontFamily: "Montserrat",
+                      color: Colors.white,
+                      decoration: TextDecoration.none),
+                  decoration: InputDecoration(
+                    labelText: "Наименование",
+                    focusColor: Colors.white,
+                  )),
+              TextFormField(
+                  cursorColor: Colors.white,
+                  onChanged: (string) {
+                    _changeProductCost(string);
+                  },
+                  style: new TextStyle(
+                      height: 2,
+                      fontSize: 15.0,
+                      fontFamily: "Montserrat",
+                      color: Colors.white,
+                      decoration: TextDecoration.none),
+                  decoration: InputDecoration(
+                    labelText: "Стоимость",
+                    focusColor: Colors.white,
+                  )),
+              DropdownButton(
+                dropdownColor: Color.fromRGBO(110, 53, 76, 1),
+                value: _productCategory,
+                itemHeight: 80,
+                underline: Container(
+                    height: 1,
+                    color: Color.fromRGBO(55, 50, 52, 1)
+                ),
+                isExpanded: true,
+                icon: Icon(Icons.arrow_downward, color: Color.fromRGBO(55, 50, 52, 1)),
+                items: _buildItems(_categories),
                 style: new TextStyle(
                     height: 2,
                     fontSize: 15.0,
                     fontFamily: "Montserrat",
                     color: Colors.white,
                     decoration: TextDecoration.none),
-                decoration: InputDecoration(
-                  labelText: "Адрес магазина",
-                  focusColor: Colors.white,
-                )
+                onChanged: (productCategory){
+                  setState(() {
+                    _changeProductCategory(productCategory);
+                  });
+                }
               ),
-              new Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.only(top: 30),
-                child: FlatButton(
-                    onPressed: (){
-                      Shop shop = Shop(this.address, 0);
-                      _addShop(shop);
-                      Navigator.pop(context);
-                    },
-                    padding: EdgeInsets.zero,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(20))
-                      ),
-                      child: new Text(
-                          "Сохранить",
-                          style: new TextStyle(
-                              fontSize: 15.0,
-                              fontFamily: "MontserratBold",
-                              color: Color.fromRGBO(130, 147, 153, 1),
-                              decoration: TextDecoration.none)),
-                    )
-                )
-              )
+              Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 30),
+                  child: FlatButton(
+                      onPressed: () {
+                        StoreProduct product = StoreProduct(_productName, double.parse(_productCost));
+                        _addStoreProduct(product);
+                        Navigator.pop(context);
+                      },
+                      padding: EdgeInsets.zero,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        child: new Text("Сохранить",
+                            style: new TextStyle(
+                                fontSize: 15.0,
+                                fontFamily: "MontserratBold",
+                                color: Color.fromRGBO(130, 147, 153, 1),
+                                decoration: TextDecoration.none)),
+                      )))
             ],
           ),
         ),

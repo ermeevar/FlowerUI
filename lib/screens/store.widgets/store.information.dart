@@ -9,9 +9,9 @@ class StoreInformation extends StatefulWidget{
 class StoreInformationState extends State<StoreInformation>
     with SingleTickerProviderStateMixin{
   Store store = new Store("Букет столицы", "Свежие цветочки", "8(900)800-40-50");
-  String name;
-  String firstPhone;
-  String secondFhone;
+  String name = "";
+  String firstPhone = "";
+  String secondFhone = "";
 
   bool _isTab = false;
 
@@ -20,27 +20,23 @@ class StoreInformationState extends State<StoreInformation>
       _isTab = !_isTab;
     });
   }
-
   void _save(){
     setState(() {
       store.name = name;
       store.firstPhone = firstPhone;
-      store.secondPhone = secondFhone;
+      //secondFhone!=null? store.secondPhone = secondFhone : "";
     });
   }
-
   void _changeName(String name){
     setState(() {
       this.name=name;
     });
   }
-
   void _changeFirstPhone(String firstPhone){
     setState(() {
       this.firstPhone=firstPhone;
     });
   }
-
   void _changeSecondPhone(String secondPhone){
     setState(() {
       this.secondFhone=secondPhone;
@@ -54,19 +50,17 @@ class StoreInformationState extends State<StoreInformation>
       child: AnimatedContainer(
         decoration: BoxDecoration(
             color: Color.fromRGBO(130, 147, 153, 1),
-            borderRadius: _isTab? BorderRadius.only(
-                bottomLeft: Radius.circular(20),
-                bottomRight: Radius.circular(20)
-            ) :
-            BorderRadius.zero
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30)
+            )
         ),
         child: _isTab? _change(context) : _read(context),
-        height: _isTab? 500 : 200,
+        height: _isTab? 480 : 200,
         duration: Duration(seconds: 1),
       ),
     );
   }
-
   Widget _read (BuildContext context){
     return Container(
       padding: const EdgeInsets.all(20),
@@ -83,22 +77,22 @@ class StoreInformationState extends State<StoreInformation>
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              new Text(store.name,
+              name!=null?Text(store.name,
                   style: new TextStyle(
                       fontSize: 20.0,
                       fontFamily: "Montserrat",
                       color: Colors.white,
                       fontWeight: FontWeight.normal,
-                      decoration: TextDecoration.none)),
-              new Text(store.firstPhone,
+                      decoration: TextDecoration.none)): Text(""),
+              firstPhone!=null?Text(store.firstPhone,
                   style: new TextStyle(
                       height: 2,
                       fontSize: 15.0,
                       fontWeight: FontWeight.normal,
                       fontFamily: "Montserrat",
                       color: Colors.white,
-                      decoration: TextDecoration.none)),
-              new Text(
+                      decoration: TextDecoration.none)):Text(""),
+              secondFhone!=null?Text(
                 // _store.secondPhone == null
                 //     ? " "
                 //     : _store.secondPhone,
@@ -108,7 +102,7 @@ class StoreInformationState extends State<StoreInformation>
                       fontWeight: FontWeight.normal,
                       fontFamily: "Montserrat",
                       color: Colors.white,
-                      decoration: TextDecoration.none)),
+                      decoration: TextDecoration.none)) : Text(""),
               new FlatButton(
                   onPressed: () {
                     _taped();
@@ -127,7 +121,6 @@ class StoreInformationState extends State<StoreInformation>
       ),
     );
   }
-
   Widget _change (BuildContext context){
     return Container(
       padding: const EdgeInsets.all(20),
@@ -136,27 +129,59 @@ class StoreInformationState extends State<StoreInformation>
           new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              new IconButton(
+              IconButton(
                   icon: Icon(Icons.west),
                   color: Colors.white,
                   onPressed: () {
                     _taped();
                   }
               ),
-              new FlatButton(
-                  onPressed: null,
-                  padding: EdgeInsets.zero,
-                  child: new Text("Выйти",
-                      style: new TextStyle(
-                          height: 2,
-                          fontSize: 15.0,
-                          fontFamily: "MontserratBold",
-                          color: Colors.white,
-                          decoration: TextDecoration.none))
-              )
+              PopupMenuButton(
+                color: Color.fromRGBO(110, 53, 76, 1),
+                icon: Icon(Icons.more_horiz, color: Colors.white),
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.exit_to_app,
+                            color: Colors.white,
+                          ),
+                          FlatButton(
+                              onPressed: null,
+                              padding: EdgeInsets.zero,
+                              child: new Text("Выйти",
+                                  style: new TextStyle(
+                                      height: 2,
+                                      fontSize: 15.0,
+                                      fontFamily: "MontserratBold",
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none))
+                          )
+                        ],
+                      )),
+                  PopupMenuItem(
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete, color: Colors.white),
+                          new FlatButton(
+                              onPressed: null,
+                              padding: EdgeInsets.zero,
+                              child: new Text("Удалить",
+                                  style: new TextStyle(
+                                      height: 2,
+                                      fontSize: 15.0,
+                                      fontFamily: "MontserratBold",
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none))
+                          )
+                        ],
+                      )),
+                ],
+              ),
             ],
           ),
-          new CircleAvatar(
+          CircleAvatar(
             radius: 50,
             backgroundImage: NetworkImage(
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
@@ -214,44 +239,28 @@ class StoreInformationState extends State<StoreInformation>
                 focusColor: Colors.white,
               )
           ),
-          new Container(
-            padding: EdgeInsets.only(top: 40, bottom: 10),
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                new FlatButton(
-                    onPressed: null,
-                    padding: EdgeInsets.zero,
-                    child: new Text("Удалить",
-                        style: new TextStyle(
-                            height: 2,
-                            fontSize: 15.0,
-                            fontFamily: "MontserratBold",
-                            color: Colors.white,
-                            decoration: TextDecoration.none))
-                ),
-                new FlatButton(
-                    onPressed: (){
-                      _taped();
-                      _save();
-                    },
-                    padding: EdgeInsets.zero,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(20))
-                      ),
-                      child: new Text(
-                          "Сохранить",
-                          style: new TextStyle(
-                              fontSize: 15.0,
-                              fontFamily: "MontserratBold",
-                              color: Color.fromRGBO(130, 147, 153, 1),
-                              decoration: TextDecoration.none)),
-                    )
-                ),
-              ],
+          Container(
+            padding: EdgeInsets.only(top: 30),
+            child: FlatButton(
+                onPressed: (){
+                  _taped();
+                  _save();
+                },
+                padding: EdgeInsets.zero,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(20))
+                  ),
+                  child: new Text(
+                      "Сохранить",
+                      style: new TextStyle(
+                          fontSize: 15.0,
+                          fontFamily: "MontserratBold",
+                          color: Color.fromRGBO(130, 147, 153, 1),
+                          decoration: TextDecoration.none)),
+                )
             ),
           )
         ],
