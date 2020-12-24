@@ -112,6 +112,7 @@ class StoreContentState extends State<StoreContent>
         length: 2,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.white,
             elevation: 0,
             primary: false,
             toolbarHeight: 30,
@@ -210,6 +211,7 @@ class StoreContentState extends State<StoreContent>
                         ),
                         FlatButton(
                             onPressed: (){
+                              Navigator.pop(context);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => ShopMainMenu(_shops[index])),

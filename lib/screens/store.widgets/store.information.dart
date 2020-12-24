@@ -130,7 +130,7 @@ class StoreInformationState extends State<StoreInformation>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                  icon: Icon(Icons.west),
+                  icon: Icon(Icons.arrow_back_ios),
                   color: Colors.white,
                   onPressed: () {
                     _taped();

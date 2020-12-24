@@ -18,11 +18,9 @@ class MyApp extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(30))
           )
-        ),
-        primaryColor: Colors.white,
-        backgroundColor: Colors.white
+        )
       ),
-      home: ShopMainMenu(Shop("г. Казань, Мавлекаева 67", 0)),
+      home: StoreMainMenu(),
     );
   }
 }
