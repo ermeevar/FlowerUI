@@ -1,5 +1,8 @@
 import 'file:///C:/Users/201706/Desktop/FlowerUI/lib/screens/store.widgets/store.main.menu.dart';
+import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
 import 'package:flutter/material.dart';
+
+import 'models/shop.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         backgroundColor: Colors.white
       ),
-      home: StoreMainMenu(),
+      home: ShopMainMenu(Shop("г. Казань, Мавлекаева 67", 0)),
     );
   }
 }

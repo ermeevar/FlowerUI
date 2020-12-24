@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:flower_ui/models/category.dart';
 import 'package:flower_ui/models/shop.dart';
-import 'package:flower_ui/models/shop.product.dart';
+import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../models/store.product.dart';
@@ -159,7 +157,6 @@ class StoreContentState extends State<StoreContent>
       ),
     );
   }
-
   Widget _shopsContent(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
@@ -208,6 +205,30 @@ class StoreContentState extends State<StoreContent>
                       child: Row(
                         children: [
                         Icon(
+                          Icons.exit_to_app,
+                          color: Colors.white,
+                        ),
+                        FlatButton(
+                            onPressed: (){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ShopMainMenu(_shops[index])),
+                              );
+                            },
+                            child: Text(
+                              "Войти",
+                              style: new TextStyle(
+                                  fontFamily: "Montserrat",
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.none),
+                            ))
+                      ],
+                    )),
+                    PopupMenuItem(
+                      child: Row(
+                        children: [
+                        Icon(
                           Icons.edit,
                           color: Colors.white,
                         ),
@@ -249,7 +270,6 @@ class StoreContentState extends State<StoreContent>
           ))),
     );
   }
-
   Widget _productsContent(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -367,7 +387,6 @@ class StoreContentState extends State<StoreContent>
       ),
     );
   }
-
   Widget _shopBottomSheet(context) {
     return Container(
       child: Padding(
@@ -420,7 +439,6 @@ class StoreContentState extends State<StoreContent>
       ),
     );
   }
-
   Widget _productBottomSheet(context) {
     return Container(
       child: Padding(
