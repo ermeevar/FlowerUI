@@ -11,9 +11,8 @@ class ShopMainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Container(
-          color:  Color.fromRGBO(130, 147, 153, 1),
+          color: Colors.white,
           alignment: Alignment.center,
           child: Column(
             children: [
@@ -23,7 +22,7 @@ class ShopMainMenu extends StatelessWidget {
                         padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
                         alignment: Alignment.topLeft,
                         decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: Color.fromRGBO(130, 147, 153, 1),
                             borderRadius: BorderRadius.only(
                                 bottomRight: Radius.circular(30)
                             )
@@ -43,7 +42,7 @@ class ShopMainMenu extends StatelessWidget {
                                 style: new TextStyle(
                                 fontSize: 20.0,
                                 fontFamily: "Montserrat",
-                                color: Color.fromRGBO(110, 53, 76, 1),
+                                color: Colors.white,
                                 fontWeight: FontWeight.normal,
                                 decoration: TextDecoration.none))),
                             ]

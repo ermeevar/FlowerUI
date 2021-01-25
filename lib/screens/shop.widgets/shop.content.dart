@@ -39,21 +39,21 @@ class ShopContentState extends State<ShopContent>
         length: 2,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Color.fromRGBO(130, 147, 153, 1),
+            backgroundColor: Colors.white,
             elevation: 0,
             primary: false,
             toolbarHeight: 30,
             bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.all(10),
-              indicatorColor: Colors.white,
+              indicatorColor: Color.fromRGBO(130, 147, 153, 1),
               tabs: [
                 Text(
                   "Заказы",
                   style: new TextStyle(
                       fontFamily: "MontserratBold",
                       fontSize: 15,
-                      color:  Colors.white,
+                      color:  Color.fromRGBO(130, 147, 153, 1),
                       decoration: TextDecoration.none),
                 ),
                 Text(
@@ -61,7 +61,7 @@ class ShopContentState extends State<ShopContent>
                   style: new TextStyle(
                       fontFamily: "MontserratBold",
                       fontSize: 15,
-                      color:  Colors.white,
+                      color:  Color.fromRGBO(130, 147, 153, 1),
                       decoration: TextDecoration.none),
                 ),
               ],
@@ -70,12 +70,12 @@ class ShopContentState extends State<ShopContent>
           body: TabBarView(
             children: [
               Container(
-                color: Color.fromRGBO(130, 147, 153, 1),
+                color: Colors.white,
                 padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: _ordersContent(context),
               ),
               Container(
-                color: Color.fromRGBO(130, 147, 153, 1),
+                color: Colors.white,
                 padding: EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: _productsContent(context),
               ),
@@ -88,7 +88,7 @@ class ShopContentState extends State<ShopContent>
   Widget _ordersContent(BuildContext context){
     return Scaffold(
       body: Container(
-        color: Color.fromRGBO(130, 147, 153, 1),
+        color: Colors.white,
           child: ListView.builder(
             itemCount: _orders.length,
             itemBuilder: (context, index) {
@@ -152,7 +152,7 @@ class ShopContentState extends State<ShopContent>
   Widget _productsContent(BuildContext context) {
     return Scaffold(
       body: Container(
-          color: Color.fromRGBO(130, 147, 153, 1),
+          color: Colors.white,
           child: ListView.builder(
             itemCount: _storeProducts.length,
             itemBuilder: (context, index) {
