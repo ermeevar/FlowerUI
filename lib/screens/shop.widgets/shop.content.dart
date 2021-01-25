@@ -46,14 +46,14 @@ class ShopContentState extends State<ShopContent>
             bottom: TabBar(
               indicatorSize: TabBarIndicatorSize.label,
               labelPadding: EdgeInsets.all(10),
-              indicatorColor: Color.fromRGBO(130, 147, 153, 1),
+              indicatorColor: Color.fromRGBO(110, 53, 76, 1),
               tabs: [
                 Text(
                   "Заказы",
                   style: new TextStyle(
                       fontFamily: "MontserratBold",
                       fontSize: 15,
-                      color:  Color.fromRGBO(130, 147, 153, 1),
+                      color:  Color.fromRGBO(110, 53, 76, 1),
                       decoration: TextDecoration.none),
                 ),
                 Text(
@@ -61,7 +61,7 @@ class ShopContentState extends State<ShopContent>
                   style: new TextStyle(
                       fontFamily: "MontserratBold",
                       fontSize: 15,
-                      color:  Color.fromRGBO(130, 147, 153, 1),
+                      color:  Color.fromRGBO(110, 53, 76, 1),
                       decoration: TextDecoration.none),
                 ),
               ],
@@ -89,7 +89,12 @@ class ShopContentState extends State<ShopContent>
     return Scaffold(
       body: Container(
         color: Colors.white,
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              color: Color.fromRGBO(110, 53, 76, 1),
+              thickness: 1.5,
+              height: 0,
+            ),
             itemCount: _orders.length,
             itemBuilder: (context, index) {
               return Padding(
@@ -153,7 +158,12 @@ class ShopContentState extends State<ShopContent>
     return Scaffold(
       body: Container(
           color: Colors.white,
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              color: Color.fromRGBO(110, 53, 76, 1),
+              thickness: 1.5,
+              height: 0,
+            ),
             itemCount: _storeProducts.length,
             itemBuilder: (context, index) {
               return Padding(

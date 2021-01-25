@@ -32,7 +32,7 @@ class ShopMainMenu extends StatelessWidget {
                             children:[
                               IconButton(
                                   icon: Icon(Icons.arrow_back_ios),
-                                  color: Color.fromRGBO(130, 147, 153, 1),
+                                  color: Colors.white,
                                   onPressed: () {
                                     Navigator.pop(context);
                                   }
