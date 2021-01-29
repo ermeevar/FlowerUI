@@ -12,25 +12,28 @@ class ShopContentState extends State<ShopContent>
     with TickerProviderStateMixin {
   bool _isEmpty=false;
 
-  List<Order> _orders = [
-    Order("59HY800HJJ", "В обработке"),
-    Order("890HH009DJ", "В обработке"),
-    Order("889045JU8J", "Готов"),
-    Order("J5453KJH4H", "Выдан покупателю"),
-    Order("34B5J343HJ", "Выдан покупателю"),
-    Order("34K3HH45JH", "Выдан покупателю"),
-    Order("34I53HH4JH", "Выдан покупателю"),
-  ];
-  List<StoreProduct> _storeProducts = [
-    new StoreProduct("Ландыш", 137.80),
-    new StoreProduct("Тюльпан", 137.80),
-    new StoreProduct("Роза", 137.80),
-    new StoreProduct(
-        "Еще роза, 100000000 розззззззззззззззззззззззззззззззззззззззззззззз",
-        137.80),
-    new StoreProduct("Много роз", 137.80),
-    new StoreProduct("Роза роза роза", 137.80),
-  ];
+  // List<Order> _orders = [
+  //   Order("59HY800HJJ", "В обработке"),
+  //   Order("890HH009DJ", "В обработке"),
+  //   Order("889045JU8J", "Готов"),
+  //   Order("J5453KJH4H", "Выдан покупателю"),
+  //   Order("34B5J343HJ", "Выдан покупателю"),
+  //   Order("34K3HH45JH", "Выдан покупателю"),
+  //   Order("34I53HH4JH", "Выдан покупателю"),
+  // ];
+  // List<StoreProduct> _storeProducts = [
+  //   new StoreProduct("Ландыш", 137.80),
+  //   new StoreProduct("Тюльпан", 137.80),
+  //   new StoreProduct("Роза", 137.80),
+  //   new StoreProduct(
+  //       "Еще роза, 100000000 розззззззззззззззззззззззззззззззззззззззззззззз",
+  //       137.80),
+  //   new StoreProduct("Много роз", 137.80),
+  //   new StoreProduct("Роза роза роза", 137.80),
+  // ];
+
+  List<Order> _orders=[];
+  List<StoreProduct> _storeProducts=[];
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +84,7 @@ class ShopContentState extends State<ShopContent>
     return Scaffold(
       body: Container(
         color: Colors.white,
-          child: ListView.separated(
+          child: _orders.length==0?Center(child: Container(color:Colors.white, child: Text("В магазине нет ни одного заказа", style: Theme.of(context).textTheme.body1))):ListView.separated(
             separatorBuilder: (context, index) => Divider(
               color: Color.fromRGBO(110, 53, 76, 1),
               thickness: 1.5,
@@ -131,7 +134,7 @@ class ShopContentState extends State<ShopContent>
     return Scaffold(
       body: Container(
           color: Colors.white,
-          child: ListView.separated(
+          child: _storeProducts.length==0?Center(child: Container(color:Colors.white, child: Text("Пока товаров никаких нет, ожидайте", style: Theme.of(context).textTheme.body1))):ListView.separated(
             separatorBuilder: (context, index) => Divider(
               color: Color.fromRGBO(110, 53, 76, 1),
               thickness: 1.5,

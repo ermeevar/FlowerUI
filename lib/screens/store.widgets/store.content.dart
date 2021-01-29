@@ -27,16 +27,7 @@ class StoreContentState extends State<StoreContent>
         "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
         0),
     new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-    new Shop("г. Казань, Мавлекаева 67", 0),
-    new Shop(
-        "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-        0),
-    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-    new Shop("г. Казань, Мавлекаева 67", 0),
-    new Shop(
-        "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-        0),
-    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
+    new Shop("г. Казань, Мавлекаева 67", 0)
   ];
   List<StoreProduct> _storeProducts = [
     new StoreProduct("Ландыш", 137.80),
@@ -48,6 +39,7 @@ class StoreContentState extends State<StoreContent>
     new StoreProduct("Много роз", 137.80),
     new StoreProduct("Роза роза роза", 137.80),
   ];
+
   List<Category> _categories=[
     Category("Цветок"),
     Category("Зелень"),
@@ -166,7 +158,7 @@ class StoreContentState extends State<StoreContent>
       body: Container(
         color: Colors.white,
         child: Expanded(
-          child: ListView.separated(
+          child: _shops.length==0?Center(child: Container(color:Colors.white, child: Text("У вас нет ни одного магазина", style: Theme.of(context).textTheme.body1))):ListView.separated(
               separatorBuilder: (context, index) => Divider(
                 color: Color.fromRGBO(110, 53, 76, 1),
                 thickness: 1.5,
@@ -247,7 +239,7 @@ class StoreContentState extends State<StoreContent>
     return Scaffold(
       body: Container(
           color: Colors.white,
-          child: ListView.separated(
+          child: _storeProducts.length==0?Center(child: Container(color:Colors.white, child: Text("У вас нет ни одного товара", style: Theme.of(context).textTheme.body1))):ListView.separated(
             separatorBuilder: (context, index) => Divider(
               color: Color.fromRGBO(110, 53, 76, 1),
               thickness: 1.5,
