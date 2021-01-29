@@ -123,19 +123,11 @@ class StoreContentState extends State<StoreContent>
               tabs: [
                 Text(
                   "Магазины",
-                  style: new TextStyle(
-                      fontFamily: "MontserratBold",
-                      fontSize: 15,
-                      color: Color.fromRGBO(110, 53, 76, 1),
-                      decoration: TextDecoration.none),
+                  style: Theme.of(context).textTheme.subtitle,
                 ),
                 Text(
                   "Ассортимент",
-                  style: new TextStyle(
-                      fontFamily: "MontserratBold",
-                      fontSize: 15,
-                      color: Color.fromRGBO(110, 53, 76, 1),
-                      decoration: TextDecoration.none),
+                  style: Theme.of(context).textTheme.subtitle,
                 ),
               ],
             ),
@@ -160,14 +152,8 @@ class StoreContentState extends State<StoreContent>
   }
   Widget _shopsContent(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromRGBO(130, 147, 153, 1),
-        label: Text("Добавить магазин",
-            style: new TextStyle(
-                fontSize: 15.0,
-                fontFamily: "MontserratBold",
-                color: Colors.white,
-                decoration: TextDecoration.none)),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -175,101 +161,86 @@ class StoreContentState extends State<StoreContent>
             builder: (context) => _shopBottomSheet(context),
           );
         },
-        icon: Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
       body: Container(
-          color: Colors.white,
-          child: Expanded(
-           child: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              color: Color.fromRGBO(110, 53, 76, 1),
-              thickness: 1.5,
-              height: 0,
-            ),
-            itemCount: _shops.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 10),
-                title: Text(
-                  _shops[index].address,
-                  style: new TextStyle(
-                      fontFamily: "Montserrat",
-                      fontSize: 15,
-                      color: Color.fromRGBO(55, 50, 52, 1),
-                      decoration: TextDecoration.none),
-                ),
-                trailing: PopupMenuButton(
-                  icon: Icon(Icons.more_vert, color: Color.fromRGBO(110, 53, 76, 1)),
-                  color: Color.fromRGBO(110, 53, 76, 1),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Row(
-                        children: [
-                        Icon(
-                          Icons.exit_to_app,
-                          color: Colors.white,
-                        ),
-                        FlatButton(
-                            onPressed: (){
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => ShopMainMenu(_shops[index])),
-                              );
-                            },
-                            child: Text(
-                              "Войти",
-                              style: new TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  decoration: TextDecoration.none),
-                            ))
-                      ],
-                    )),
-                    PopupMenuItem(
-                      child: Row(
-                        children: [
-                        Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                        FlatButton(
-                            onPressed: null,
-                            child: Text(
-                              "Изменить",
-                              style: new TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  decoration: TextDecoration.none),
-                            ))
-                      ],
-                    )),
-                    PopupMenuItem(
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, color: Colors.white),
-                          FlatButton(
-                            onPressed: (){
-                              _deleteShop(_shops[index]);
-                              Navigator.pop(context);
-                            },
-                            child: Text(
-                              "Удалить",
-                              style: new TextStyle(
-                                  fontFamily: "Montserrat",
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  decoration: TextDecoration.none),
-                            ))
-                      ],
-                    )),
-                  ],
-                ),
-              );
-            },
-          ))),
+        color: Colors.white,
+        child: Expanded(
+          child: ListView.separated(
+              separatorBuilder: (context, index) => Divider(
+                color: Color.fromRGBO(110, 53, 76, 1),
+                thickness: 1.5,
+                height: 0,
+              ),
+              itemCount: _shops.length+1,
+              itemBuilder: (context, index) {
+                return index+1==_shops.length+1?Container(height: 90,color: Colors.white):ListTile(
+                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  title: Text(
+                      _shops[index].address,
+                      style: Theme.of(context).textTheme.body1
+                  ),
+                  trailing: PopupMenuButton(
+                    icon: Icon(Icons.more_vert, color: Color.fromRGBO(110, 53, 76, 1)),
+                    color: Color.fromRGBO(110, 53, 76, 1),
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.exit_to_app,
+                                color: Colors.white,
+                              ),
+                              FlatButton(
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => ShopMainMenu(_shops[index])),
+                                    );
+                                  },
+                                  child: Text(
+                                      "Войти",
+                                      style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
+                                  ))
+                            ],
+                          )),
+                      PopupMenuItem(
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                              FlatButton(
+                                  onPressed: null,
+                                  child: Text(
+                                      "Изменить",
+                                      style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
+                                  ))
+                            ],
+                          )),
+                      PopupMenuItem(
+                          child: Row(
+                            children: [
+                              Icon(Icons.delete, color: Colors.white),
+                              FlatButton(
+                                  onPressed: (){
+                                    _deleteShop(_shops[index]);
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                      "Удалить",
+                                      style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
+                                  ))
+                            ],
+                          )),
+                    ],
+                  ),
+                );
+              }),
+        )
+      ),
     );
   }
   Widget _productsContent(BuildContext context) {
@@ -282,9 +253,9 @@ class StoreContentState extends State<StoreContent>
               thickness: 1.5,
               height: 0,
             ),
-            itemCount: _storeProducts.length,
+            itemCount: _storeProducts.length+1,
             itemBuilder: (context, index) {
-              return Padding(
+              return index+1==_storeProducts.length+1?Container(height: 90,color: Colors.white):Padding(
                 padding: EdgeInsets.symmetric(vertical: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,20 +274,11 @@ class StoreContentState extends State<StoreContent>
                         children: [
                           Text(
                             _storeProducts[index].name,
-                            style: new TextStyle(
-                                fontFamily: "Montserrat",
-                                fontSize: 20,
-                                color: Color.fromRGBO(55, 50, 52, 1),
-                                decoration: TextDecoration.none),
+                            style: Theme.of(context).textTheme.body1.copyWith(fontWeight: FontWeight.bold),
                           ),
                           Text(
                             _storeProducts[index].cost.toString() + " руб.",
-                            style: new TextStyle(
-                                height: 2,
-                                fontFamily: "Montserrat",
-                                fontSize: 15,
-                                color: Color.fromRGBO(55, 50, 52, 1),
-                                decoration: TextDecoration.none),
+                            style: Theme.of(context).textTheme.body1.copyWith(height: 2),
                           ),
                         ],
                       ),
@@ -336,11 +298,7 @@ class StoreContentState extends State<StoreContent>
                                 onPressed: null,
                                 child: Text(
                                   "Изменить",
-                                  style: new TextStyle(
-                                      fontFamily: "Montserrat",
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      decoration: TextDecoration.none),
+                                  style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
                                 ))
                           ],
                         )),
@@ -355,11 +313,7 @@ class StoreContentState extends State<StoreContent>
                               },
                               child: Text(
                                 "Удалить",
-                                style: new TextStyle(
-                                    fontFamily: "Montserrat",
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    decoration: TextDecoration.none),
+                                  style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
                               ))
                           ],
                         )),
@@ -370,14 +324,8 @@ class StoreContentState extends State<StoreContent>
               );
             },
           )),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromRGBO(130, 147, 153, 1),
-        label: Text("Добавить товар",
-            style: new TextStyle(
-                fontSize: 15.0,
-                fontFamily: "MontserratBold",
-                color: Colors.white,
-                decoration: TextDecoration.none)),
         onPressed: () {
           showModalBottomSheet(
             context: context,
@@ -385,7 +333,7 @@ class StoreContentState extends State<StoreContent>
             builder: (context) => _productBottomSheet(context),
           );
         },
-        icon: Icon(Icons.add),
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -397,21 +345,18 @@ class StoreContentState extends State<StoreContent>
           padding: EdgeInsets.all(10),
           child: Wrap(
             children: [
-              TextFormField(
-                  cursorColor: Colors.white,
-                  onChanged: (string) {
-                    _changeShopAddress(string);
-                  },
-                  style: new TextStyle(
-                      height: 2,
-                      fontSize: 15.0,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      decoration: TextDecoration.none),
-                  decoration: InputDecoration(
-                    labelText: "Адрес магазина",
-                    focusColor: Colors.white,
-                  )),
+              Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                child: TextFormField(
+                    cursorColor: Colors.white,
+                    onChanged: (string) {
+                      _changeShopAddress(string);
+                    },
+                    style: Theme.of(context).textTheme.body2,
+                    decoration: InputDecoration(
+                      labelText: "Адрес магазина",
+                    )),
+              ),
               new Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(top: 30),
@@ -429,11 +374,7 @@ class StoreContentState extends State<StoreContent>
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: new Text("Сохранить",
-                            style: new TextStyle(
-                                fontSize: 15.0,
-                                fontFamily: "MontserratBold",
-                                color: Color.fromRGBO(130, 147, 153, 1),
-                                decoration: TextDecoration.none)),
+                            style: Theme.of(context).textTheme.body2.copyWith(color: Color.fromRGBO(130, 147, 153, 1))),
                       )))
             ],
           ),
@@ -449,36 +390,31 @@ class StoreContentState extends State<StoreContent>
           padding: EdgeInsets.all(10),
           child: Wrap(
             children: [
-              TextFormField(
-                  cursorColor: Colors.white,
-                  onChanged: (string) {
-                    _changeProductName(string);
-                  },
-                  style: new TextStyle(
-                      height: 2,
-                      fontSize: 15.0,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      decoration: TextDecoration.none),
-                  decoration: InputDecoration(
-                    labelText: "Наименование",
-                    focusColor: Colors.white,
-                  )),
-              TextFormField(
-                  cursorColor: Colors.white,
-                  onChanged: (string) {
-                    _changeProductCost(string);
-                  },
-                  style: new TextStyle(
-                      height: 2,
-                      fontSize: 15.0,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      decoration: TextDecoration.none),
-                  decoration: InputDecoration(
-                    labelText: "Стоимость",
-                    focusColor: Colors.white,
-                  )),
+              Padding(
+                  padding: EdgeInsets.only(top: 15),
+                child: TextFormField(
+                    cursorColor: Colors.white,
+                    onChanged: (string) {
+                      _changeProductName(string);
+                    },
+                    style: Theme.of(context).textTheme.body2.copyWith(height:2),
+                    decoration: InputDecoration(
+                      labelText: "Наименование",
+                    )),
+              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 15),
+                child: TextFormField(
+                    cursorColor: Colors.white,
+                    onChanged: (string) {
+                      _changeProductCost(string);
+                    },
+                    style: Theme.of(context).textTheme.body2.copyWith(height:2),
+                    decoration: InputDecoration(
+                      labelText: "Стоимость",
+                      focusColor: Colors.white,
+                    ))
+              ),
               DropdownButton(
                 dropdownColor: Color.fromRGBO(110, 53, 76, 1),
                 value: _productCategory,
@@ -490,12 +426,7 @@ class StoreContentState extends State<StoreContent>
                 isExpanded: true,
                 icon: Icon(Icons.arrow_downward, color: Color.fromRGBO(55, 50, 52, 1)),
                 items: _buildItems(_categories),
-                style: new TextStyle(
-                    height: 2,
-                    fontSize: 15.0,
-                    fontFamily: "Montserrat",
-                    color: Colors.white,
-                    decoration: TextDecoration.none),
+                style: Theme.of(context).textTheme.body2,
                 onChanged: (productCategory){
                   setState(() {
                     _changeProductCategory(productCategory);
@@ -519,11 +450,7 @@ class StoreContentState extends State<StoreContent>
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: new Text("Сохранить",
-                            style: new TextStyle(
-                                fontSize: 15.0,
-                                fontFamily: "MontserratBold",
-                                color: Color.fromRGBO(130, 147, 153, 1),
-                                decoration: TextDecoration.none)),
+                            style: Theme.of(context).textTheme.body2.copyWith(color: Color.fromRGBO(130, 147, 153, 1))),
                       )))
             ],
           ),

@@ -39,12 +39,7 @@ class ShopMainMenu extends StatelessWidget {
                               ),
                               Expanded(child: Text(
                                 _shop.address,
-                                style: new TextStyle(
-                                fontSize: 20.0,
-                                fontFamily: "Montserrat",
-                                color: Colors.white,
-                                fontWeight: FontWeight.normal,
-                                decoration: TextDecoration.none))),
+                                style: Theme.of(context).textTheme.subtitle.copyWith(color: Colors.white))),
                             ]
                         )
                       ))

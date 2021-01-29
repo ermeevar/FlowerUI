@@ -56,7 +56,7 @@ class StoreInformationState extends State<StoreInformation>
             )
         ),
         child: _isTab? _change(context) : _read(context),
-        height: _isTab? 480 : 200,
+        height: _isTab? 470 : 200,
         duration: Duration(seconds: 1),
       ),
     );
@@ -78,31 +78,15 @@ class StoreInformationState extends State<StoreInformation>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               name!=null?Text(store.name,
-                  style: new TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                      decoration: TextDecoration.none)): Text(""),
-              firstPhone!=null?Text(store.firstPhone,
-                  style: new TextStyle(
-                      height: 2,
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      decoration: TextDecoration.none)):Text(""),
+                  style: Theme.of(context).textTheme.title): Text(""),
+              firstPhone!=null?Text("8(900)200-20-20",
+                  style: Theme.of(context).textTheme.body2.copyWith(height: 2)):Text(""),
               secondFhone!=null?Text(
                 // _store.secondPhone == null
                 //     ? " "
                 //     : _store.secondPhone,
                   "8(950)245-78-78",
-                  style: new TextStyle(
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.normal,
-                      fontFamily: "Montserrat",
-                      color: Colors.white,
-                      decoration: TextDecoration.none)) : Text(""),
+                  style: Theme.of(context).textTheme.body2) : Text(""),
               new FlatButton(
                   onPressed: () {
                     _taped();
@@ -111,8 +95,9 @@ class StoreInformationState extends State<StoreInformation>
                   child: new Text("Изменить",
                       style: new TextStyle(
                           height: 2,
-                          fontSize: 15.0,
-                          fontFamily: "MontserratBold",
+                          fontSize: 19,
+                          fontFamily: "SourceSansPro",
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                           decoration: TextDecoration.none))),
             ],
@@ -151,13 +136,8 @@ class StoreInformationState extends State<StoreInformation>
                               onPressed: null,
                               padding: EdgeInsets.zero,
                               child: new Text("Выйти",
-                                  style: new TextStyle(
-                                      height: 2,
-                                      fontSize: 15.0,
-                                      fontFamily: "MontserratBold",
-                                      color: Colors.white,
-                                      decoration: TextDecoration.none))
-                          )
+                                  style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
+                          ))
                         ],
                       )),
                   PopupMenuItem(
@@ -168,13 +148,8 @@ class StoreInformationState extends State<StoreInformation>
                               onPressed: null,
                               padding: EdgeInsets.zero,
                               child: new Text("Удалить",
-                                  style: new TextStyle(
-                                      height: 2,
-                                      fontSize: 15.0,
-                                      fontFamily: "MontserratBold",
-                                      color: Colors.white,
-                                      decoration: TextDecoration.none))
-                          )
+                                  style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
+                          ))
                         ],
                       )),
                 ],
@@ -187,57 +162,51 @@ class StoreInformationState extends State<StoreInformation>
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
             backgroundColor: Colors.transparent,
           ),
-          TextFormField(
-            onChanged: (name){
-              _changeName(name);
-            },
-            cursorColor: Colors.white,
-            key: Key("name"),
-            initialValue: store.name != null ? store.name : "",
-            style: new TextStyle(
-                height: 2,
-                fontSize: 15.0,
-                fontFamily: "Montserrat",
-                color: Colors.white,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-              labelText: "Наименование",
-              focusColor: Colors.white,
-            )
+          Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: TextFormField(
+                onChanged: (name){
+                  _changeName(name);
+                },
+                cursorColor: Colors.white,
+                key: Key("name"),
+                initialValue: store.name != null ? store.name : "",
+                style: Theme.of(context).textTheme.body2,
+                decoration: InputDecoration(
+                  labelText: "Наименование",
+                  focusColor: Colors.white,
+                )
+            ),
           ),
-          TextFormField(
-            onChanged: (firstPhone){
-              _changeFirstPhone(firstPhone);
-            },
-            cursorColor: Colors.white,
-            initialValue: store.firstPhone != null ? store.firstPhone : "",
-            style: new TextStyle(
-                height: 2,
-                fontSize: 15.0,
-                fontFamily: "Montserrat",
-                color: Colors.white,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-              labelText: "Основной телефон",
-              focusColor: Colors.white,
-            )
+          Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: TextFormField(
+                onChanged: (firstPhone){
+                  _changeFirstPhone(firstPhone);
+                },
+                cursorColor: Colors.white,
+                initialValue: store.firstPhone != null ? store.firstPhone : "",
+                style: Theme.of(context).textTheme.body2,
+                decoration: InputDecoration(
+                  labelText: "Основной телефон",
+                  focusColor: Colors.white,
+                )
+            ),
           ),
-          TextFormField(
-            onChanged: (secondPhone){
-              _changeSecondPhone(secondPhone);
-            },
-            cursorColor: Colors.white,
-            initialValue: store.secondPhone != null ? store.secondPhone : "",
-            style: new TextStyle(
-                height: 2,
-                fontSize: 15.0,
-                fontFamily: "Montserrat",
-                color: Colors.white,
-                decoration: TextDecoration.none),
-            decoration: InputDecoration(
-                labelText: "Дополнительный телефон",
-                focusColor: Colors.white,
-              )
+          Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: TextFormField(
+                onChanged: (secondPhone){
+                  _changeSecondPhone(secondPhone);
+                },
+                cursorColor: Colors.white,
+                initialValue: store.secondPhone != null ? store.secondPhone : "",
+                style: Theme.of(context).textTheme.body2,
+                decoration: InputDecoration(
+                  labelText: "Дополнительный телефон",
+                  focusColor: Colors.white,
+                )
+            ),
           ),
           Container(
             padding: EdgeInsets.only(top: 30),
@@ -255,11 +224,7 @@ class StoreInformationState extends State<StoreInformation>
                   ),
                   child: new Text(
                       "Сохранить",
-                      style: new TextStyle(
-                          fontSize: 15.0,
-                          fontFamily: "MontserratBold",
-                          color: Color.fromRGBO(130, 147, 153, 1),
-                          decoration: TextDecoration.none)),
+                      style: Theme.of(context).textTheme.body2.copyWith(color: Color.fromRGBO(130, 147, 153, 1)))
                 )
             ),
           )

@@ -41,12 +41,12 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
   fonts:
-    - family: Montserrat
+    - family: Philosopher
       fonts:
-        - asset: fonts/Montserrat.ttf
-    - family: MontserratBold
+        - asset: resources/fonts/Philosopher.ttf
+    - family: SourceSansPro
       fonts:
-        - asset: fonts/MontserratBold.ttf
+        - asset: resources/fonts/SourceSansPro.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
