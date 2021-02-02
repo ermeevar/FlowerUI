@@ -1,11 +1,16 @@
+import 'dart:convert';
+
 import 'package:flower_ui/models/category.dart';
 import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../models/store.product.dart';
 
 class StoreContent extends StatefulWidget {
+  StoreContent({Key key}):super(key:key);
+
   @override
   StoreContentState createState() => StoreContentState();
 }
@@ -16,19 +21,39 @@ class StoreContentState extends State<StoreContent>
   String _productName;
   String _productCost;
   String _productCategory;
-  List<Shop> _shops = [
-    new Shop("г. Казань, Мавлекаева 67", 0),
-    new Shop(
-        "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-        0),
-    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-    new Shop("г. Казань, Мавлекаева 67", 0),
-    new Shop(
-        "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-        0),
-    new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-    new Shop("г. Казань, Мавлекаева 67", 0)
-  ];
+  List<Shop> _shops = List<Shop>();
+  //   new Shop("г. Казань, Мавлекаева 67", 0),
+  //   new Shop(
+  //       "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
+  //       0),
+  //   new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
+  //   new Shop("г. Казань, Мавлекаева 67", 0),
+  //   new Shop(
+  //       "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
+  //       0),
+  //   new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
+  //   new Shop("г. Казань, Мавлекаева 67", 0)
+  // ];
+
+  // StoreContentState(){
+  //   getShops();
+  // }
+
+  getShops(){
+    WebApiServices.fetchShop().then((response){
+      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+      print(response.body);
+      Iterable list = json.decode(response.body);
+      List<Shop> shopsData = List<Shop>();
+      shopsData = list
+          .map((model)=>Shop.fromObject(model))
+          .toList();
+      setState(() {
+        _shops=shopsData;
+      });
+    });
+  }
+
   List<StoreProduct> _storeProducts = [
     new StoreProduct("Ландыш", 137.80),
     new StoreProduct("Тюльпан", 137.80),
