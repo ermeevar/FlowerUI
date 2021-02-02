@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 class WebApiServices{
   static String _storeUrl = "https://127.0.0.1:5001/stores";
   static String _shopUrl = "https://10.0.2.2:5001/shops";
-  static String _categoryUrl = "https://localhost:5001/categories";
-  static String _storeProductUrl = "https://localhost:5001/storeproducts";
-  static String _shopProductUrl = "https://localhost:5001/shopproducts";
+  static String _categoryUrl = "https://10.0.2.2:5001/categories";
+  static String _storeProductUrl = "https://10.0.2.2:5001/storeproducts";
+  static String _shopProductUrl = "https://10.0.2.2:5001/shopproducts";
 
   static Future fetchStore() async{
     return await http.get(_storeUrl);

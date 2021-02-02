@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:flower_ui/models/category.dart';
+import 'package:flower_ui/models/connection.web.api.dart';
 import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,56 +22,57 @@ class StoreContentState extends State<StoreContent>
   String _productName;
   String _productCost;
   String _productCategory;
+  Store _store;
   List<Shop> _shops = List<Shop>();
-  //   new Shop("г. Казань, Мавлекаева 67", 0),
-  //   new Shop(
-  //       "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-  //       0),
-  //   new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-  //   new Shop("г. Казань, Мавлекаева 67", 0),
-  //   new Shop(
-  //       "г. Казань, Проспект Победы 3000000000000000000000000099hgjhgjhgjhhgjhghhghjhj",
-  //       0),
-  //   new Shop("г. Казань, Солнечный город 1, 2 этаж", 0),
-  //   new Shop("г. Казань, Мавлекаева 67", 0)
-  // ];
+  List<StoreProduct> _storeProducts = List<StoreProduct>();
+  List<Category> _categories = List<Category>();
 
-  // StoreContentState(){
-  //   getShops();
-  // }
+  StoreContentState(){
+    _store= Store();
+    _store.id=1;
+    getShops();
+    getCategories();
+    getStoreProducts();
+  }
+
 
   getShops(){
     WebApiServices.fetchShop().then((response){
-      print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-      print(response.body);
       Iterable list = json.decode(response.body);
       List<Shop> shopsData = List<Shop>();
       shopsData = list
           .map((model)=>Shop.fromObject(model))
           .toList();
+      //Iterable<Shop> filterList=shopsData.where((element) => element.storeId == _store.id);
       setState(() {
-        _shops=shopsData;
+        _shops=shopsData.where((element) => element.storeId == _store.id).toList();
       });
     });
   }
-
-  List<StoreProduct> _storeProducts = [
-    new StoreProduct("Ландыш", 137.80),
-    new StoreProduct("Тюльпан", 137.80),
-    new StoreProduct("Роза", 137.80),
-    new StoreProduct(
-        "Еще роза, 100000000 розззззззззззззззззззззззззззззззззззззззззззззз",
-        137.80),
-    new StoreProduct("Много роз", 137.80),
-    new StoreProduct("Роза роза роза", 137.80),
-  ];
-
-  List<Category> _categories=[
-    Category("Цветок"),
-    Category("Зелень"),
-    Category("Украшение"),
-    Category("Открытка"),
-  ];
+  getStoreProducts(){
+    WebApiServices.fetchStoreProduct().then((response){
+      Iterable list = json.decode(response.body);
+      List<StoreProduct> storeproductsData = List<StoreProduct>();
+      storeproductsData = list
+          .map((model)=>StoreProduct.fromObject(model))
+          .toList();
+      setState(() {
+        _storeProducts=storeproductsData;
+      });
+    });
+  }
+  getCategories(){
+    WebApiServices.fetchCategory().then((response){
+      Iterable list = json.decode(response.body);
+      List<Category> categories = List<Category>();
+      categories = list
+          .map((model)=>Category.fromObject(model))
+          .toList();
+      setState(() {
+        _categories=categories;
+      });
+    });
+  }
 
   List<DropdownMenuItem> _buildItems(List<Category> list){
     List<DropdownMenuItem> newList=List();
@@ -280,7 +282,7 @@ class StoreContentState extends State<StoreContent>
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
-                          'https://upload.wikimedia.org/wikipedia/commons/d/db/Rosa_Peer_Gynt_1.jpg'),
+                          'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'),
                       backgroundColor: Colors.transparent,
                     ),
                     Expanded(
@@ -379,9 +381,9 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 30),
                   child: FlatButton(
                       onPressed: () {
-                        Shop shop = Shop(this._shopAddress, 0);
-                        _addShop(shop);
-                        Navigator.pop(context);
+                        // Shop shop = Shop({address=this._shopAddress, storeId=0});
+                        // _addShop(shop);
+                        // Navigator.pop(context);
                       },
                       padding: EdgeInsets.zero,
                       child: Container(
@@ -455,9 +457,9 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 30),
                   child: FlatButton(
                       onPressed: () {
-                        StoreProduct product = StoreProduct(_productName, double.parse(_productCost));
-                        _addStoreProduct(product);
-                        Navigator.pop(context);
+                        // StoreProduct product = StoreProduct(_productName, double.parse(_productCost));
+                        // _addStoreProduct(product);
+                        // Navigator.pop(context);
                       },
                       padding: EdgeInsets.zero,
                       child: Container(

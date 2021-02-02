@@ -4,28 +4,22 @@ import 'package:flower_ui/models/category.dart';
 class StoreProduct{
   int _id;
   String _name;
-  List<int> _picture;
+  List<double> _picture;
   double _cost;
   int _categoryId;
   int _storeId;
-  Category _category;
-  Store _store;
-
-  StoreProduct(this._name, this._cost);
 
   int get id => _id;
   String get name => _name;
-  List<int> get picture => _picture;
+  List<double> get picture => _picture;
   double get cost => _cost;
   int get categoryId => _categoryId;
   int get storeId => _storeId;
-  Category get category => _category;
-  Store get store => _store;
 
   set name(String name){
     _name = name;
   }
-  set picture(List<int> picture){
+  set picture(List<double> picture){
     _picture = picture;
   }
   set cost(double cost){
@@ -37,12 +31,6 @@ class StoreProduct{
   set storeId(int storeId){
     _storeId = storeId;
   }
-  set category(Category category){
-    _category = category;
-  }
-  set store(Store store){
-    _store = store;
-  }
 
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();
@@ -53,8 +41,6 @@ class StoreProduct{
     map["cost"] = _cost;
     map["categoryId"] = _categoryId;
     map["storeId"] = _storeId;
-    map["category"] = _category;
-    map["store"] = _store;
 
     return map;
   }
@@ -66,7 +52,12 @@ class StoreProduct{
     this._cost = object["cost"];
     this._categoryId = object["categoryId"];
     this._storeId = object["storeId"];
-    this._category = object["category"];
-    this._store = object["store"];
+
+    print(_id);
+    print(_name);
+    print(_picture);
+    print(_cost);
+    print(_categoryId);
+    print(_storeId);
   }
 }

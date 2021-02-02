@@ -8,10 +8,17 @@ class StoreInformation extends StatefulWidget{
 
 class StoreInformationState extends State<StoreInformation>
     with SingleTickerProviderStateMixin{
-  Store store = new Store("Букет столицы", "Свежие цветочки", "8(900)800-40-50");
+  Store store;
   String name = "";
   String firstPhone = "";
   String secondFhone = "";
+
+  StoreInformationState(){
+    store=Store();
+    store.id=1;
+    store.name="Букет столицы";
+    store.firstPhone="8(900)800-40-50";
+  }
 
   bool _isTab = false;
 

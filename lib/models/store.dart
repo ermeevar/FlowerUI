@@ -6,8 +6,6 @@ class Store{
   String _firstPhone;
   String _secondPhone;
 
-  Store(this._name, this._description, this._firstPhone);
-
   int get id => _id;
   String get name => _name;
   String get description => _description;
@@ -15,6 +13,11 @@ class Store{
   String get firstPhone => _firstPhone;
   String get secondPhone => _secondPhone;
 
+  Store(){}
+
+  set id(int id){
+    _id = id;
+  }
   set name(String name){
     _name = name;
   }
@@ -51,5 +54,12 @@ class Store{
     this._picture = object["picture"];
     this._firstPhone = object["firstPhone"];
     this._secondPhone = object["secondPhone"];
+
+    print(_id);
+    print(_name);
+    print(_description);
+    print(_picture);
+    print(_firstPhone);
+    print(_secondPhone);
   }
 }
