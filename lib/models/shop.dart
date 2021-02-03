@@ -7,12 +7,17 @@ class Shop{
   String get address => _address;
   int get storeId => _storeId;
 
+  set id(int id){
+    _id = id;
+  }
   set address(String address){
     _address = address;
   }
   set storeId(int storeId){
     _storeId = storeId;
   }
+
+  Shop(){}
 
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();

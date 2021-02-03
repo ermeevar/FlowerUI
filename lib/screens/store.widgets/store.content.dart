@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flower_ui/models/category.dart';
-import 'package:flower_ui/models/connection.web.api.dart';
 import 'package:flower_ui/models/shop.dart';
 import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/models/web.api.services.dart';
@@ -10,10 +9,14 @@ import 'package:flutter/material.dart';
 import '../../models/store.product.dart';
 
 class StoreContent extends StatefulWidget {
-  StoreContent({Key key}):super(key:key);
+  Store _store;
+
+  StoreContent(Store store){
+    _store=store;
+  }
 
   @override
-  StoreContentState createState() => StoreContentState();
+  StoreContentState createState() => StoreContentState(_store);
 }
 
 class StoreContentState extends State<StoreContent>
@@ -23,18 +26,17 @@ class StoreContentState extends State<StoreContent>
   String _productCost;
   String _productCategory;
   Store _store;
+  Shop _shoosenShop = Shop();
   List<Shop> _shops = List<Shop>();
   List<StoreProduct> _storeProducts = List<StoreProduct>();
   List<Category> _categories = List<Category>();
 
-  StoreContentState(){
-    _store= Store();
-    _store.id=1;
+  StoreContentState(Store store){
+    _store=store;
     getShops();
     getCategories();
     getStoreProducts();
   }
-
 
   getShops(){
     WebApiServices.fetchShop().then((response){
@@ -43,7 +45,6 @@ class StoreContentState extends State<StoreContent>
       shopsData = list
           .map((model)=>Shop.fromObject(model))
           .toList();
-      //Iterable<Shop> filterList=shopsData.where((element) => element.storeId == _store.id);
       setState(() {
         _shops=shopsData.where((element) => element.storeId == _store.id).toList();
       });
@@ -83,16 +84,24 @@ class StoreContentState extends State<StoreContent>
 
     return newList;
   }
-  void _addShop(Shop shop) {
-    setState(() {
-      _shops.add(shop);
-    });
+  void _addShop(Shop shop) async{
+   if(await WebApiServices.postShop(shop)==202){
+     getShops();
+   }
   }
-  void _deleteShop(Shop shop) {
-    setState(() {
-      _shops.remove(shop);
-    });
+  void _deleteShop(int id) async{
+    if(await WebApiServices.deleteShop(id)==204){
+      getShops();
+    }
   }
+  void _updateShop(Shop shop) async{
+    if(await WebApiServices.putShop(shop)==204){
+      getShops();
+    }
+
+    _shoosenShop=new Shop();
+  }
+
   void _addStoreProduct(StoreProduct product) {
     setState(() {
       _storeProducts.add(product);
@@ -101,11 +110,6 @@ class StoreContentState extends State<StoreContent>
   void _deleteStoreProduct(StoreProduct product) {
     setState(() {
       _storeProducts.remove(product);
-    });
-  }
-  void _changeShopAddress(String addressName) {
-    setState(() {
-      this._shopAddress = addressName;
     });
   }
   void _changeProductName(String productName) {
@@ -232,7 +236,14 @@ class StoreContentState extends State<StoreContent>
                                 color: Colors.white,
                               ),
                               FlatButton(
-                                  onPressed: null,
+                                  onPressed: (){
+                                    _shoosenShop=_shops[index];
+                                    showModalBottomSheet(
+                                      context: context,
+                                      isScrollControlled: true,
+                                      builder: (context) => _shopBottomSheet(context),
+                                    );
+                              },
                                   child: Text(
                                       "Изменить",
                                       style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
@@ -245,7 +256,7 @@ class StoreContentState extends State<StoreContent>
                               Icon(Icons.delete, color: Colors.white),
                               FlatButton(
                                   onPressed: (){
-                                    _deleteShop(_shops[index]);
+                                    _deleteShop(_shops[index].id);
                                     Navigator.pop(context);
                                   },
                                   child: Text(
@@ -367,9 +378,12 @@ class StoreContentState extends State<StoreContent>
               Padding(
                   padding: EdgeInsets.symmetric(vertical: 20),
                 child: TextFormField(
+                    initialValue: _shoosenShop.id != 0 ? _shoosenShop.address : "",
                     cursorColor: Colors.white,
-                    onChanged: (string) {
-                      _changeShopAddress(string);
+                    onChanged: (addressName) {
+                      setState(() {
+                        this._shopAddress = addressName;
+                      });
                     },
                     style: Theme.of(context).textTheme.body2,
                     decoration: InputDecoration(
@@ -381,9 +395,20 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 30),
                   child: FlatButton(
                       onPressed: () {
-                        // Shop shop = Shop({address=this._shopAddress, storeId=0});
-                        // _addShop(shop);
-                        // Navigator.pop(context);
+                        Shop shop = Shop();
+                        shop.storeId=_store.id;
+                        shop.address=_shopAddress;
+
+                        if(_shoosenShop.id==null){
+                          shop.id=0;
+                          _addShop(shop);
+                        }
+                        else{
+                          shop.id=_shoosenShop.id;
+                          _updateShop(shop);
+                        }
+
+                        Navigator.pop(context);
                       },
                       padding: EdgeInsets.zero,
                       child: Container(

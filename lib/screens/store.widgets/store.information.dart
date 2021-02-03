@@ -2,8 +2,14 @@ import 'package:flower_ui/models/store.dart';
 import 'package:flutter/material.dart';
 
 class StoreInformation extends StatefulWidget{
+  Store store;
+
+  StoreInformation(Store store){
+    this.store=store;
+  }
+
   @override
-  StoreInformationState createState() => StoreInformationState();
+  StoreInformationState createState() => StoreInformationState(store);
 }
 
 class StoreInformationState extends State<StoreInformation>
@@ -13,11 +19,8 @@ class StoreInformationState extends State<StoreInformation>
   String firstPhone = "";
   String secondFhone = "";
 
-  StoreInformationState(){
-    store=Store();
-    store.id=1;
-    store.name="Букет столицы";
-    store.firstPhone="8(900)800-40-50";
+  StoreInformationState(Store store){
+    this.store=store;
   }
 
   bool _isTab = false;
@@ -31,22 +34,7 @@ class StoreInformationState extends State<StoreInformation>
     setState(() {
       store.name = name;
       store.firstPhone = firstPhone;
-      //secondFhone!=null? store.secondPhone = secondFhone : "";
-    });
-  }
-  void _changeName(String name){
-    setState(() {
-      this.name=name;
-    });
-  }
-  void _changeFirstPhone(String firstPhone){
-    setState(() {
-      this.firstPhone=firstPhone;
-    });
-  }
-  void _changeSecondPhone(String secondPhone){
-    setState(() {
-      this.secondFhone=secondPhone;
+      secondFhone!=null? store.secondPhone = secondFhone : "";
     });
   }
 
@@ -84,15 +72,11 @@ class StoreInformationState extends State<StoreInformation>
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              name!=null?Text(store.name,
+              store.name!=null?Text(store.name,
                   style: Theme.of(context).textTheme.title): Text(""),
-              firstPhone!=null?Text("8(900)200-20-20",
+              store.firstPhone!=null?Text(store.firstPhone,
                   style: Theme.of(context).textTheme.body2.copyWith(height: 2)):Text(""),
-              secondFhone!=null?Text(
-                // _store.secondPhone == null
-                //     ? " "
-                //     : _store.secondPhone,
-                  "8(950)245-78-78",
+              store.secondPhone!=null?Text(store.secondPhone,
                   style: Theme.of(context).textTheme.body2) : Text(""),
               new FlatButton(
                   onPressed: () {
@@ -173,7 +157,9 @@ class StoreInformationState extends State<StoreInformation>
             padding: EdgeInsets.only(top: 15),
             child: TextFormField(
                 onChanged: (name){
-                  _changeName(name);
+                  setState(() {
+                    this.name=name;
+                  });
                 },
                 cursorColor: Colors.white,
                 key: Key("name"),
@@ -189,7 +175,9 @@ class StoreInformationState extends State<StoreInformation>
             padding: EdgeInsets.only(top: 15),
             child: TextFormField(
                 onChanged: (firstPhone){
-                  _changeFirstPhone(firstPhone);
+                  setState(() {
+                    this.firstPhone=firstPhone;
+                  });
                 },
                 cursorColor: Colors.white,
                 initialValue: store.firstPhone != null ? store.firstPhone : "",
@@ -204,7 +192,9 @@ class StoreInformationState extends State<StoreInformation>
             padding: EdgeInsets.only(top: 15),
             child: TextFormField(
                 onChanged: (secondPhone){
-                  _changeSecondPhone(secondPhone);
+                  setState(() {
+                    this.secondFhone=secondPhone;
+                  });
                 },
                 cursorColor: Colors.white,
                 initialValue: store.secondPhone != null ? store.secondPhone : "",
