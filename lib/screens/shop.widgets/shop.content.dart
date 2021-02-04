@@ -1,39 +1,67 @@
+import 'dart:convert';
+
 import 'package:flower_ui/models/order.dart';
+import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/shop.product.dart';
+import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/models/store.product.dart';
+import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShopContent extends StatefulWidget {
+  Shop _shop;
+
+  ShopContent(this._shop);
+
   @override
-  ShopContentState createState() => ShopContentState();
+  ShopContentState createState() => ShopContentState(_shop);
 }
 
 class ShopContentState extends State<ShopContent>
     with TickerProviderStateMixin {
+  Shop _shop;
   bool _isEmpty=false;
-
-  // List<Order> _orders = [
-  //   Order("59HY800HJJ", "В обработке"),
-  //   Order("890HH009DJ", "В обработке"),
-  //   Order("889045JU8J", "Готов"),
-  //   Order("J5453KJH4H", "Выдан покупателю"),
-  //   Order("34B5J343HJ", "Выдан покупателю"),
-  //   Order("34K3HH45JH", "Выдан покупателю"),
-  //   Order("34I53HH4JH", "Выдан покупателю"),
-  // ];
-  // List<StoreProduct> _storeProducts = [
-  //   new StoreProduct("Ландыш", 137.80),
-  //   new StoreProduct("Тюльпан", 137.80),
-  //   new StoreProduct("Роза", 137.80),
-  //   new StoreProduct(
-  //       "Еще роза, 100000000 розззззззззззззззззззззззззззззззззззззззззззззз",
-  //       137.80),
-  //   new StoreProduct("Много роз", 137.80),
-  //   new StoreProduct("Роза роза роза", 137.80),
-  // ];
-
   List<Order> _orders=[];
   List<StoreProduct> _storeProducts=[];
+  List<ShopProduct> _shopProducts=[];
+
+  getShopProducts(){
+    List<ShopProduct> shopProductsData = List<ShopProduct>();
+    List<StoreProduct> storeProductsData = List<StoreProduct>();
+    List<ShopProduct> shopProductsDataF = List<ShopProduct>();
+    List<StoreProduct> storeProductsDataF = List<StoreProduct>();
+
+    WebApiServices.fetchStoreProduct().then((response){
+      Iterable list = json.decode(response.body);
+      storeProductsData = list
+          .map((model)=>StoreProduct.fromObject(model))
+          .toList();
+    });
+    WebApiServices.fetchShopProduct().then((response){
+      Iterable list = json.decode(response.body);
+      shopProductsData = list
+          .map((model)=>ShopProduct.fromObject(model))
+          .toList()
+          .where((element) => element.id==_shop.id);
+    });
+
+    for(int i =0; i<shopProductsData.length; i++){
+      for(int ii =0; ii<storeProductsData.length; ii++){
+        if(shopProductsData[i].storeProductId==storeProductsData[ii].id){
+          shopProductsDataF.add(shopProductsData[i]);
+          storeProductsDataF.add(storeProductsData[ii]);
+        }
+      }
+    }
+
+    setState(() {
+      _shopProducts=shopProductsDataF;
+      _storeProducts=storeProductsDataF;
+    });
+  }
+
+  ShopContentState(this._shop);
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ class Category{
   int _id;
   String _name;
 
-  Category(this._name);
+  Category();
 
   int get id => _id;
   String get name => _name;

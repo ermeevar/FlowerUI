@@ -1,25 +1,27 @@
-import 'package:flower_ui/models/store.dart';
-import 'package:flower_ui/models/category.dart';
-
 class StoreProduct{
-  int _id;
+  int _id=0;
   String _name;
-  List<double> _picture;
-  double _cost;
-  int _categoryId;
-  int _storeId;
+  List<int> _picture = [];
+  double _cost =0;
+  int _categoryId =0;
+  int _storeId =0;
+
+  StoreProduct();
 
   int get id => _id;
   String get name => _name;
-  List<double> get picture => _picture;
+  List<int> get picture => _picture;
   double get cost => _cost;
   int get categoryId => _categoryId;
   int get storeId => _storeId;
 
+  set id(int id){
+    _id = id;
+  }
   set name(String name){
     _name = name;
   }
-  set picture(List<double> picture){
+  set picture(List<int> picture){
     _picture = picture;
   }
   set cost(double cost){
@@ -49,15 +51,8 @@ class StoreProduct{
     this._id = object["id"];
     this._name = object["name"];
     this._picture = object["picture"];
-    this._cost = object["cost"];
+    this._cost = object["cost"].toDouble();
     this._categoryId = object["categoryId"];
     this._storeId = object["storeId"];
-
-    print(_id);
-    print(_name);
-    print(_picture);
-    print(_cost);
-    print(_categoryId);
-    print(_storeId);
   }
 }

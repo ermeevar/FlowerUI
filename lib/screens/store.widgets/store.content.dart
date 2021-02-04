@@ -21,58 +21,29 @@ class StoreContent extends StatefulWidget {
 
 class StoreContentState extends State<StoreContent>
     with TickerProviderStateMixin {
+
+  Store _store;
+
+  //shop data
+  List<Shop> _shops = List<Shop>();
+  Shop _shoosenShop = Shop();
   String _shopAddress;
+
+  //store-product data
+  List<StoreProduct> _storeProducts = List<StoreProduct>();
+  StoreProduct _choosenStoreProduct = StoreProduct();
+  List<int> _picture;
   String _productName;
   String _productCost;
   String _productCategory;
-  Store _store;
-  Shop _shoosenShop = Shop();
-  List<Shop> _shops = List<Shop>();
-  List<StoreProduct> _storeProducts = List<StoreProduct>();
+
   List<Category> _categories = List<Category>();
 
   StoreContentState(Store store){
     _store=store;
-    getShops();
-    getCategories();
-    getStoreProducts();
-  }
-
-  getShops(){
-    WebApiServices.fetchShop().then((response){
-      Iterable list = json.decode(response.body);
-      List<Shop> shopsData = List<Shop>();
-      shopsData = list
-          .map((model)=>Shop.fromObject(model))
-          .toList();
-      setState(() {
-        _shops=shopsData.where((element) => element.storeId == _store.id).toList();
-      });
-    });
-  }
-  getStoreProducts(){
-    WebApiServices.fetchStoreProduct().then((response){
-      Iterable list = json.decode(response.body);
-      List<StoreProduct> storeproductsData = List<StoreProduct>();
-      storeproductsData = list
-          .map((model)=>StoreProduct.fromObject(model))
-          .toList();
-      setState(() {
-        _storeProducts=storeproductsData;
-      });
-    });
-  }
-  getCategories(){
-    WebApiServices.fetchCategory().then((response){
-      Iterable list = json.decode(response.body);
-      List<Category> categories = List<Category>();
-      categories = list
-          .map((model)=>Category.fromObject(model))
-          .toList();
-      setState(() {
-        _categories=categories;
-      });
-    });
+    _getShops();
+    _getCategories();
+    _getStoreProducts();
   }
 
   List<DropdownMenuItem> _buildItems(List<Category> list){
@@ -84,48 +55,74 @@ class StoreContentState extends State<StoreContent>
 
     return newList;
   }
-  void _addShop(Shop shop) async{
+
+  _getShops(){
+    WebApiServices.fetchShop().then((response){
+      Iterable list = json.decode(response.body);
+      List<Shop> shopsData = List<Shop>();
+      shopsData = list
+          .map((model)=>Shop.fromObject(model))
+          .toList();
+      setState(() {
+        _shops=shopsData.where((element) => element.storeId == _store.id).toList();
+      });
+    });
+  }
+  _getStoreProducts(){
+    WebApiServices.fetchStoreProduct().then((response){
+      Iterable list = json.decode(response.body);
+      List<StoreProduct> storeproductsData = List<StoreProduct>();
+      storeproductsData = list
+          .map((model)=>StoreProduct.fromObject(model))
+          .toList();
+      setState(() {
+        _storeProducts=storeproductsData.where((element) => element.storeId==_store.id).toList();
+      });
+    });
+  }
+  _getCategories(){
+    WebApiServices.fetchCategory().then((response){
+      Iterable list = json.decode(response.body);
+      List<Category> categoriesData = List<Category>();
+      categoriesData = list
+          .map((model)=>Category.fromObject(model))
+          .toList();
+      setState(() {
+        _categories=categoriesData;
+      });
+    });
+  }
+
+  _addShop(Shop shop) async{
    if(await WebApiServices.postShop(shop)==202){
-     getShops();
+     _getShops();
    }
   }
-  void _deleteShop(int id) async{
+  _deleteShop(int id) async{
     if(await WebApiServices.deleteShop(id)==204){
-      getShops();
+      _getShops();
     }
   }
-  void _updateShop(Shop shop) async{
+  _updateShop(Shop shop) async{
     if(await WebApiServices.putShop(shop)==204){
-      getShops();
+      _getShops();
     }
 
     _shoosenShop=new Shop();
   }
 
-  void _addStoreProduct(StoreProduct product) {
-    setState(() {
-      _storeProducts.add(product);
-    });
+  _addStoreProduct(StoreProduct storeProduct) async{
+    if(await WebApiServices.postStoreProduct(storeProduct)==202){
+      _getStoreProducts();
+    }
   }
-  void _deleteStoreProduct(StoreProduct product) {
-    setState(() {
-      _storeProducts.remove(product);
-    });
+  _deleteStoreProduct(int id) async{
+    if(await WebApiServices.deleteStoreProduct(id)==200){
+      _getStoreProducts();
+    }
   }
-  void _changeProductName(String productName) {
-    setState(() {
-      this._productName = productName;
-    });
-  }
-  void _changeProductCost(String productCost) {
-    setState(() {
-      this._productCost = productCost;
-    });
-  }
-  void _changeProductCategory(String productCategory) {
-    setState(() {
-      this._productCategory = productCategory;
-    });
+  _changeProductName(String productName) {
+
   }
 
   @override
@@ -236,13 +233,15 @@ class StoreContentState extends State<StoreContent>
                                 color: Colors.white,
                               ),
                               FlatButton(
-                                  onPressed: (){
+                                  onPressed: () async{
                                     _shoosenShop=_shops[index];
-                                    showModalBottomSheet(
+                                    await showModalBottomSheet(
                                       context: context,
                                       isScrollControlled: true,
                                       builder: (context) => _shopBottomSheet(context),
                                     );
+
+                                    Navigator.pop(context);
                               },
                                   child: Text(
                                       "Изменить",
@@ -290,7 +289,9 @@ class StoreContentState extends State<StoreContent>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
+                    _storeProducts[index].picture==null?
+                      Icon(Icons.image_not_supported, color: Color.fromRGBO(130, 147, 153, 1), size: 50,)
+                      :CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
                           'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'),
@@ -325,7 +326,16 @@ class StoreContentState extends State<StoreContent>
                               color: Colors.white,
                             ),
                             FlatButton(
-                                onPressed: null,
+                                onPressed: (){
+                                  _choosenStoreProduct=_storeProducts[index];
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (context) => _productBottomSheet(context),
+                                  );
+
+                                  Navigator.pop(context);
+                                },
                                 child: Text(
                                   "Изменить",
                                   style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
@@ -338,7 +348,7 @@ class StoreContentState extends State<StoreContent>
                             Icon(Icons.delete, color: Colors.white),
                             FlatButton(
                               onPressed: (){
-                              _deleteStoreProduct(_storeProducts[index]);
+                              _deleteStoreProduct(_storeProducts[index].id);
                               Navigator.pop(context);
                               },
                               child: Text(
@@ -438,8 +448,10 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 15),
                 child: TextFormField(
                     cursorColor: Colors.white,
-                    onChanged: (string) {
-                      _changeProductName(string);
+                    onChanged: (productName) {
+                      setState(() {
+                        this._productName = productName;
+                      });
                     },
                     style: Theme.of(context).textTheme.body2.copyWith(height:2),
                     decoration: InputDecoration(
@@ -450,8 +462,10 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 15),
                 child: TextFormField(
                     cursorColor: Colors.white,
-                    onChanged: (string) {
-                      _changeProductCost(string);
+                    onChanged: (productCost) {
+                      setState(() {
+                        this._productCost = productCost;
+                      });
                     },
                     style: Theme.of(context).textTheme.body2.copyWith(height:2),
                     decoration: InputDecoration(
@@ -473,7 +487,7 @@ class StoreContentState extends State<StoreContent>
                 style: Theme.of(context).textTheme.body2,
                 onChanged: (productCategory){
                   setState(() {
-                    _changeProductCategory(productCategory);
+                    this._productCategory = productCategory;
                   });
                 }
               ),
@@ -482,9 +496,23 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 30),
                   child: FlatButton(
                       onPressed: () {
-                        // StoreProduct product = StoreProduct(_productName, double.parse(_productCost));
-                        // _addStoreProduct(product);
-                        // Navigator.pop(context);
+                        StoreProduct storeProduct = StoreProduct();
+                        storeProduct.storeId=_store.id;
+                        storeProduct.picture=_picture;
+                        storeProduct.name=_productName;
+                        storeProduct.cost=double.parse(_productCost);
+                        storeProduct.categoryId=_categories.firstWhere((element) => element.name==_productCategory).id;
+
+                        if(_choosenStoreProduct.id==null){
+                          storeProduct.id=0;
+                          _addStoreProduct(storeProduct);
+                        }
+                        else{
+                          // storeProduct.id=_choosenStoreProduct.id;
+                          // _updateShop(storeProduct);
+                        }
+
+                        Navigator.pop(context);
                       },
                       padding: EdgeInsets.zero,
                       child: Container(

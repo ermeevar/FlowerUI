@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/store.product.dart';
 import 'package:http/http.dart' as http;
 
 class WebApiServices{
@@ -37,17 +38,28 @@ class WebApiServices{
     var response=await http.post(_shopUrl, headers: header, body: shopJson);
     return response.statusCode;
   }
+  static Future postStoreProduct(StoreProduct storeProduct) async{
+    var reverseStoreProduct=storeProduct.toMap();
+    var storeProductJson=json.encode(reverseStoreProduct);
+    var response=await http.post(_storeProductUrl, headers: header, body: storeProductJson);
+    print("0000000000000000000000000000000000000000000000000");
+    print(response.statusCode);
+    return response.statusCode;
+  }
 
   static Future putShop(Shop shop) async{
     var reverseShop=shop.toMap();
     var shopJson=json.encode(reverseShop);
-    var response=await http.post(_shopUrl+shop.id.toString(), headers: header, body: shopJson);
-    print(response.statusCode);
+    var response=await http.post(_shopUrl+shop.id.toString(), headers: header, body: shopJson);print(response.statusCode);
     return response.statusCode;
   }
 
   static Future deleteShop(int id) async{
     var response=await http.delete(_shopUrl+id.toString());
+    return response.statusCode;
+  }
+  static Future deleteStoreProduct(int id) async{
+    var response=await http.delete(_storeProductUrl+id.toString());
     return response.statusCode;
   }
 }

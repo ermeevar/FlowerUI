@@ -44,7 +44,7 @@ class ShopMainMenu extends StatelessWidget {
                         )
                       ))
                   ),
-              ShopContent()
+              ShopContent(_shop)
             ],
           )
       )
