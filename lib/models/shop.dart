@@ -1,37 +1,33 @@
-class Shop{
-  int _id;
-  String _address;
-  int _storeId;
+import 'dart:convert';
 
-  int get id => _id;
-  String get address => _address;
-  int get storeId => _storeId;
+List<Shop> shopFromJson(String str) => List<Shop>.from(json.decode(str).map((x) => Shop.fromJson(x)));
 
-  set id(int id){
-    _id = id;
-  }
-  set address(String address){
-    _address = address;
-  }
-  set storeId(int storeId){
-    _storeId = storeId;
-  }
+String shopToJson(List<Shop> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-  Shop(){}
+class Shop {
+  Shop({
+    this.id,
+    this.address,
+    this.storeId,
+    this.accountId,
+  });
 
-  Map<String, dynamic> toMap(){
-    var map = new Map<String, dynamic>();
+  int id;
+  String address;
+  int storeId;
+  int accountId;
 
-    map["id"] = _id;
-    map["address"] = _address;
-    map["storeId"] = _storeId;
+  factory Shop.fromJson(Map<String, dynamic> json) => Shop(
+    id: json["id"],
+    address: json["address"],
+    storeId: json["storeId"],
+    accountId: json["accountId"],
+  );
 
-    return map;
-  }
-
-  Shop.fromObject(dynamic object){
-    this._id = object["id"];
-    this._address = object["address"];
-    this._storeId = object["storeId"];
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "address": address,
+    "storeId": storeId,
+    "accountId": accountId,
+  };
 }

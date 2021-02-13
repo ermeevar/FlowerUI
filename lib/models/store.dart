@@ -5,6 +5,7 @@ class Store{
   List<int> _picture;
   String _firstPhone;
   String _secondPhone;
+  int _accountId;
 
   int get id => _id;
   String get name => _name;
@@ -12,6 +13,7 @@ class Store{
   List<int> get picture => _picture;
   String get firstPhone => _firstPhone;
   String get secondPhone => _secondPhone;
+  int get accountId => _accountId;
 
   Store(){}
 
@@ -33,6 +35,9 @@ class Store{
   set secondPhone(String secondPhone){
     _secondPhone = secondPhone;
   }
+  set accountId(int accountId){
+    _accountId = accountId;
+  }
 
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();
@@ -43,6 +48,7 @@ class Store{
     map["picture"] = _picture;
     map["firstPhone"] = _firstPhone;
     map["secondPhone"] = _secondPhone;
+    map["accountId"] = _accountId;
 
     return map;
   }
@@ -54,6 +60,7 @@ class Store{
     this._picture = object["picture"];
     this._firstPhone = object["firstPhone"];
     this._secondPhone = object["secondPhone"];
+    this._accountId = object["accountId"];
 
     print(_id);
     print(_name);
