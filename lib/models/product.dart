@@ -39,4 +39,13 @@ class Product {
     "productCategoryId": productCategoryId,
     "storeId": storeId,
   };
+
+  Map<String, dynamic> toJsonPut() => {
+    "id": id,
+    "name": name,
+    "picture": picture,
+    "cost": cost,
+    "productCategoryId": productCategoryId,
+    "storeId": storeId,
+  };
 }

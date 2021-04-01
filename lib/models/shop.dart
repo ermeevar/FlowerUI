@@ -29,4 +29,11 @@ class Shop {
     "storeId": storeId,
     "accountId": accountId,
   };
+
+  Map<String, dynamic> toJsonPut() => {
+    "id": id,
+    "address": address,
+    "storeId": storeId,
+    "accountId": accountId,
+  };
 }

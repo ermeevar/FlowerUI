@@ -116,8 +116,9 @@ class WebApiServices {
     var reverseShop = shop.toJson();
     var shopJson = json.encode(reverseShop);
     var response = await dio.post(_shopUrl,
-        options: Options(headers: {
-    HttpHeaders.contentTypeHeader: "application/json"}), data: shopJson);
+        options: Options(
+            headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+        data: shopJson);
     return response.statusCode;
   }
 
@@ -136,6 +137,22 @@ class WebApiServices {
 
   static Future deleteProduct(int id) async {
     var response = await dio.delete(_productUrl + id.toString());
+    return response.statusCode;
+  }
+
+  static Future putShop(Shop shop) async {
+    var reverseShop = shop.toJsonPut();
+    var shopJson = json.encode(reverseShop);
+    var response = await dio.put(_shopUrl + shop.id.toString(),
+        queryParameters: header, data: shopJson);
+    return response.statusCode;
+  }
+
+  static Future putProduct(Product product) async {
+    var productShop = product.toJsonPut();
+    var productJson = json.encode(productShop);
+    var response = await dio.put(_productUrl + product.id.toString(),
+        queryParameters: header, data: productJson);
     return response.statusCode;
   }
 }
