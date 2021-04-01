@@ -1,128 +1,94 @@
-import 'dart:convert';
-import 'package:flower_ui/models/category.dart';
+import 'package:flower_ui/models/product.category.dart';
 import 'package:flower_ui/models/shop.dart';
-import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
+import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../models/store.product.dart';
+import '../../models/product.dart';
 
 class StoreContent extends StatefulWidget {
-  Store _store;
-
-  StoreContent(Store store) {
-    _store = store;
-  }
-
   @override
-  StoreContentState createState() => StoreContentState(_store);
+  StoreContentState createState() => StoreContentState();
 }
 
 class StoreContentState extends State<StoreContent>
     with TickerProviderStateMixin {
-  Store _store;
+  Shop _shop = Shop();
+  Product _product = Product();
+  List<ProductCategory> _productCategories = [];
+  List<Shop> _shops = [];
+  List<Product> _products = [];
 
-  //shop data
-  List<Shop> _shops = List<Shop>();
-  Shop _shoosenShop = Shop();
-  String _shopAddress;
-
-  //store-product data
-  List<StoreProduct> _storeProducts = List<StoreProduct>();
-  StoreProduct _choosenStoreProduct = StoreProduct();
-  List<int> _picture;
-  String _productName;
-  String _productCost;
-  String _productCategory;
-
-  List<Category> _categories = List<Category>();
-
-  StoreContentState(Store store) {
-    _store = store;
+  StoreContentState() {
+    _shop.storeId = StoreMainMenu.store.id;
+    _shop.accountId = StoreMainMenu.account.id;
+    _product.storeId = StoreMainMenu.store.id;
     _getShops();
-    _getCategories();
-    _getStoreProducts();
+    _getProductCategories();
+    _getProducts();
   }
 
-  List<DropdownMenuItem> _buildItems(List<Category> list) {
-    List<DropdownMenuItem> newList = List();
-
-    for (var item in list) {
-      newList.add(DropdownMenuItem(child: Text(item.name), value: item.name));
-    }
-
-    return newList;
-  }
-
-  _getShops() {
-    WebApiServices.fetchShop().then((response) {
+  _getShops() async {
+    await WebApiServices.fetchShop().then((response) {
       var shopsData = shopFromJson(response.data);
       setState(() {
-        _shops =
-            shopsData.where((element) => element.storeId == _store.id).toList();
+        _shops = shopsData
+            .where((element) => element.storeId == StoreMainMenu.store.id)
+            .toList();
       });
     });
   }
 
-  _getStoreProducts() {
-    // WebApiServices.fetchStoreProduct().then((response) {
-    //   Iterable list = json.decode(response.body);
-    //   List<StoreProduct> storeproductsData = List<StoreProduct>();
-    //   storeproductsData =
-    //       list.map((model) => StoreProduct.fromObject(model)).toList();
-    //   setState(() {
-    //     _storeProducts = storeproductsData
-    //         .where((element) => element.storeId == _store.id)
-    //         .toList();
-    //   });
-    // });
-  }
-
-  _getCategories() {
-    WebApiServices.fetchCategory().then((response) {
-      Iterable list = json.decode(response.body);
-      List<Category> categoriesData = List<Category>();
-      categoriesData = list.map((model) => Category.fromObject(model)).toList();
+  _getProducts() async {
+    await WebApiServices.fetchProduct().then((response) {
+      var productsData = productFromJson(response.data);
       setState(() {
-        _categories = categoriesData;
+        _products = productsData
+            .where((element) => element.storeId == StoreMainMenu.store.id)
+            .toList();
       });
     });
   }
 
-  _addShop(Shop shop) async {
-    if (await WebApiServices.postShop(shop) == 202) {
-      _getShops();
-    }
+  _getProductCategories() async {
+    await WebApiServices.fetchProductCategory().then((response) {
+      var productCategoriesData = productCategoryFromJson(response.data);
+      setState(() {
+        _productCategories = productCategoriesData;
+      });
+    });
   }
 
-  _deleteShop(int id) async {
-    if (await WebApiServices.deleteShop(id) == 204) {
-      _getShops();
-    }
+  ProductCategory _getCategoryById(int index){
+    return _productCategories.firstWhere((element) => element.id==index);
   }
 
-  _updateShop(Shop shop) async {
-    if (await WebApiServices.putShop(shop) == 204) {
-      _getShops();
-    }
-
-    _shoosenShop = new Shop();
+  List<Container> _choiseChipsBuildList() {
+    List<Container> middleList = [];
+    for (var item in _productCategories)
+      middleList.add(Container(
+        padding: EdgeInsets.all(5),
+        child: ChoiceChip(
+          label: Text(
+            item.name,
+            style: Theme.of(context).textTheme.body1,
+          ),
+          selectedColor: Colors.white,
+          disabledColor: Colors.white10,
+          selected: _product.productCategoryId == item.id,
+          onSelected: (isSelect) {
+            setState(() {
+              isSelect ? _product.productCategoryId = item.id
+                  : _product.productCategoryId = null;
+              Navigator.pop(context);
+              _productBottomSheet(context);
+            });
+          },
+        ),
+      ));
+    return middleList;
   }
-
-  _addStoreProduct(StoreProduct storeProduct) async {
-    if (await WebApiServices.postStoreProduct(storeProduct) == 202) {
-      _getStoreProducts();
-    }
-  }
-
-  _deleteStoreProduct(int id) async {
-    if (await WebApiServices.deleteStoreProduct(id) == 200) {
-      _getStoreProducts();
-    }
-  }
-
-  _changeProductName(String productName) {}
 
   @override
   Widget build(BuildContext context) {
@@ -208,18 +174,20 @@ class StoreContentState extends State<StoreContent>
                               title: Text(_shops[index].address,
                                   style: Theme.of(context).textTheme.body1),
                               trailing: PopupMenuButton(
-                                icon: Icon(Icons.more_vert,
-                                    color: Color.fromRGBO(110, 53, 76, 1)),
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: Color.fromRGBO(110, 53, 76, 1),
+                                ),
                                 color: Color.fromRGBO(110, 53, 76, 1),
                                 itemBuilder: (context) => [
                                   PopupMenuItem(
-                                      child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.exit_to_app,
-                                        color: Colors.white,
-                                      ),
-                                      FlatButton(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.exit_to_app,
+                                          color: Colors.white,
+                                        ),
+                                        FlatButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                             Navigator.push(
@@ -230,24 +198,27 @@ class StoreContentState extends State<StoreContent>
                                                           _shops[index])),
                                             );
                                           },
-                                          child: Text("Войти",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .body1
-                                                  .copyWith(
-                                                      color: Colors.white)))
-                                    ],
-                                  )),
+                                          child: Text(
+                                            "Войти",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   PopupMenuItem(
-                                      child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
-                                      FlatButton(
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                        ),
+                                        FlatButton(
                                           onPressed: () async {
-                                            _shoosenShop = _shops[index];
+                                            _shop = _shops[index];
                                             await showModalBottomSheet(
                                               context: context,
                                               isScrollControlled: true,
@@ -255,33 +226,44 @@ class StoreContentState extends State<StoreContent>
                                                   _shopBottomSheet(context),
                                             );
 
+                                            _shop = Shop();
                                             Navigator.pop(context);
                                           },
-                                          child: Text("Изменить",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .body1
-                                                  .copyWith(
-                                                      color: Colors.white)))
-                                    ],
-                                  )),
+                                          child: Text(
+                                            "Изменить",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   PopupMenuItem(
-                                      child: Row(
-                                    children: [
-                                      Icon(Icons.delete, color: Colors.white),
-                                      FlatButton(
-                                          onPressed: () {
-                                            _deleteShop(_shops[index].id);
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.delete, color: Colors.white),
+                                        FlatButton(
+                                          onPressed: () async {
+                                            if (await WebApiServices.deleteShop(
+                                                    _shops[index].id) ==
+                                                204) {
+                                              _getShops();
+                                            }
                                             Navigator.pop(context);
                                           },
-                                          child: Text("Удалить",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .body1
-                                                  .copyWith(
-                                                      color: Colors.white)))
-                                    ],
-                                  )),
+                                          child: Text(
+                                            "Удалить",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -293,49 +275,53 @@ class StoreContentState extends State<StoreContent>
   Widget _productsContent(BuildContext context) {
     return Scaffold(
       body: Container(
-          color: Colors.white,
-          child: _storeProducts.length == 0
-              ? Center(
-                  child: Container(
-                      color: Colors.white,
-                      child: Text("У вас нет ни одного товара",
-                          style: Theme.of(context).textTheme.body1)))
-              : ListView.separated(
-                  separatorBuilder: (context, index) => Divider(
-                    color: Color.fromRGBO(110, 53, 76, 1),
-                    thickness: 1.5,
-                    height: 0,
+        color: Colors.white,
+        child: _products.length == 0
+            ? Center(
+                child: Container(
+                  color: Colors.white,
+                  child: Text(
+                    "У вас нет ни одного товара",
+                    style: Theme.of(context).textTheme.body1,
                   ),
-                  itemCount: _storeProducts.length + 1,
-                  itemBuilder: (context, index) {
-                    return index + 1 == _storeProducts.length + 1
-                        ? Container(height: 90, color: Colors.white)
-                        : Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _storeProducts[index].picture == null
-                                    ? Icon(
-                                        Icons.image_not_supported,
-                                        color: Color.fromRGBO(130, 147, 153, 1),
-                                        size: 50,
-                                      )
-                                    : CircleAvatar(
-                                        radius: 50,
-                                        backgroundImage: NetworkImage(
-                                            'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'),
-                                        backgroundColor: Colors.transparent,
-                                      ),
-                                Expanded(
-                                    child: Padding(
+                ),
+              )
+            : ListView.separated(
+                separatorBuilder: (context, index) => Divider(
+                  color: Color.fromRGBO(110, 53, 76, 1),
+                  thickness: 1.5,
+                  height: 0,
+                ),
+                itemCount: _products.length + 1,
+                itemBuilder: (context, index) {
+                  return index + 1 == _products.length + 1
+                      ? Container(height: 90, color: Colors.white)
+                      : Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _products[index].picture == null
+                                  ? Icon(
+                                      Icons.image_not_supported,
+                                      color: Color.fromRGBO(130, 147, 153, 1),
+                                      size: 50,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 50,
+                                      backgroundImage: NetworkImage(
+                                          'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'),
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                              Expanded(
+                                child: Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _storeProducts[index].name,
+                                        _products[index].name + " | " + _getCategoryById(_products[index].productCategoryId).name,
                                         style: Theme.of(context)
                                             .textTheme
                                             .body1
@@ -343,7 +329,7 @@ class StoreContentState extends State<StoreContent>
                                                 fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        _storeProducts[index].cost.toString() +
+                                        _products[index].cost.toString() +
                                             " руб.",
                                         style: Theme.of(context)
                                             .textTheme
@@ -352,74 +338,82 @@ class StoreContentState extends State<StoreContent>
                                       ),
                                     ],
                                   ),
-                                )),
-                                PopupMenuButton(
-                                  icon: Icon(Icons.more_vert,
-                                      color: Color.fromRGBO(110, 53, 76, 1)),
-                                  color: Color.fromRGBO(110, 53, 76, 1),
-                                  itemBuilder: (context) => [
-                                    PopupMenuItem(
-                                        child: Row(
+                                ),
+                              ),
+                              PopupMenuButton(
+                                icon: Icon(Icons.more_vert,
+                                    color: Color.fromRGBO(110, 53, 76, 1)),
+                                color: Color.fromRGBO(110, 53, 76, 1),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    child: Row(
                                       children: [
                                         Icon(
                                           Icons.edit,
                                           color: Colors.white,
                                         ),
                                         FlatButton(
-                                            onPressed: () {
-                                              _choosenStoreProduct =
-                                                  _storeProducts[index];
-                                              showModalBottomSheet(
-                                                context: context,
-                                                isScrollControlled: true,
-                                                builder: (context) =>
-                                                    _productBottomSheet(
-                                                        context),
-                                              );
+                                          onPressed: () {
+                                            _product = _products[index];
+                                            showModalBottomSheet(
+                                              context: context,
+                                              isScrollControlled: true,
+                                              builder: (context) =>
+                                                  _productBottomSheet(context),
+                                            );
 
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Изменить",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .body1
-                                                    .copyWith(
-                                                        color: Colors.white)))
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            "Изменить",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                        ),
                                       ],
-                                    )),
-                                    PopupMenuItem(
-                                        child: Row(
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    child: Row(
                                       children: [
                                         Icon(Icons.delete, color: Colors.white),
                                         FlatButton(
-                                            onPressed: () {
-                                              _deleteStoreProduct(
-                                                  _storeProducts[index].id);
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Удалить",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .body1
-                                                    .copyWith(
-                                                        color: Colors.white)))
+                                          onPressed: () async {
+                                            if (await WebApiServices
+                                                    .deleteProduct(
+                                                        _products[index].id) ==
+                                                200) {
+                                              _getProducts();
+                                            }
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            "Удалить",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .body1
+                                                .copyWith(color: Colors.white),
+                                          ),
+                                        ),
                                       ],
-                                    )),
-                                  ],
-                                )
-                              ],
-                            ),
-                          );
-                  },
-                )),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        );
+                },
+              ),
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromRGBO(130, 147, 153, 1),
         onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) => _productBottomSheet(context),
-          );
+          setState(() {
+            _productBottomSheet(context);
+          });
         },
         child: Icon(Icons.add),
       ),
@@ -437,49 +431,47 @@ class StoreContentState extends State<StoreContent>
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20),
                 child: TextFormField(
-                    initialValue:
-                        _shoosenShop.id != 0 ? _shoosenShop.address : "",
-                    cursorColor: Colors.white,
-                    onChanged: (addressName) {
-                      setState(() {
-                        this._shopAddress = addressName;
-                      });
-                    },
-                    style: Theme.of(context).textTheme.body2,
-                    decoration: InputDecoration(
-                      labelText: "Адрес магазина",
-                    )),
+                  initialValue: _shop.id != null ? _shop.address : "",
+                  cursorColor: Colors.white,
+                  onChanged: (addressName) {
+                    setState(() {
+                      this._shop.address = addressName;
+                    });
+                  },
+                  style: Theme.of(context).textTheme.body2,
+                  decoration: InputDecoration(
+                    labelText: "Адрес магазина",
+                  ),
+                ),
               ),
-              new Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 30),
-                  child: FlatButton(
-                      onPressed: () {
-                        Shop shop = Shop();
-                        shop.storeId = _store.id;
-                        shop.address = _shopAddress;
+              Container(
+                alignment: Alignment.center,
+                padding: EdgeInsets.only(top: 30),
+                child: FlatButton(
+                  onPressed: () async {
+                    if (_shop.id ==
+                        null) if (await WebApiServices.postShop(_shop) == 202)
+                      _getShops();
+                    //else
+                    //_updateShop(shop);
 
-                        if (_shoosenShop.id == null) {
-                          shop.id = 0;
-                          _addShop(shop);
-                        } else {
-                          shop.id = _shoosenShop.id;
-                          _updateShop(shop);
-                        }
-
-                        Navigator.pop(context);
-                      },
-                      padding: EdgeInsets.zero,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: new Text("Сохранить",
-                            style: Theme.of(context).textTheme.body2.copyWith(
-                                color: Color.fromRGBO(130, 147, 153, 1))),
-                      )))
+                    _shop = Shop();
+                    Navigator.pop(context);
+                  },
+                  padding: EdgeInsets.zero,
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(20))),
+                    child: new Text("Сохранить",
+                        style: Theme.of(context)
+                            .textTheme
+                            .body2
+                            .copyWith(color: Color.fromRGBO(130, 147, 153, 1))),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -487,100 +479,107 @@ class StoreContentState extends State<StoreContent>
     );
   }
 
-  Widget _productBottomSheet(context) {
-    return Container(
-      child: Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: Container(
-          padding: EdgeInsets.all(10),
-          child: Wrap(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 15),
-                child: TextFormField(
-                    cursorColor: Colors.white,
-                    onChanged: (productName) {
-                      setState(() {
-                        this._productName = productName;
-                      });
-                    },
-                    style:
-                        Theme.of(context).textTheme.body2.copyWith(height: 2),
-                    decoration: InputDecoration(
-                      labelText: "Наименование",
-                    )),
+  _productBottomSheet(context) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Container(
+              child: Padding(
+                padding: MediaQuery.of(context).viewInsets,
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Wrap(
+                    children: [
+                      Center(
+                        child: Container(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Wrap(
+                            children: _choiseChipsBuildList(),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: TextFormField(
+                          cursorColor: Colors.white,
+                          onChanged: (productName) {
+                            setState(() {
+                              this._product.name = productName;
+                            });
+                          },
+                          style: Theme.of(context)
+                              .textTheme
+                              .body2
+                              .copyWith(height: 2),
+                          decoration: InputDecoration(
+                            labelText: "Наименование",
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: TextFormField(
+                          cursorColor: Colors.white,
+                          onChanged: (productCost) {
+                            setState(() {
+                              this._product.cost = double.parse(productCost);
+                            });
+                          },
+                          style: Theme.of(context)
+                              .textTheme
+                              .body2
+                              .copyWith(height: 2),
+                          decoration: InputDecoration(
+                            labelText: "Стоимость",
+                            focusColor: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: 30),
+                        child: FlatButton(
+                          onPressed: () async {
+                            if (_product.id == null) {
+                              if (await WebApiServices.postProduct(_product) ==
+                                  202) {
+                                _getProducts();
+                              }
+                            }
+                            //else
+                            //_updateShop(storeProduct);
+
+                            _product = Product();
+                            Navigator.pop(context);
+                          },
+                          padding: EdgeInsets.zero,
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20))),
+                            child: new Text("Сохранить",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .body2
+                                    .copyWith(
+                                        color:
+                                            Color.fromRGBO(130, 147, 153, 1))),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: TextFormField(
-                      cursorColor: Colors.white,
-                      onChanged: (productCost) {
-                        setState(() {
-                          this._productCost = productCost;
-                        });
-                      },
-                      style:
-                          Theme.of(context).textTheme.body2.copyWith(height: 2),
-                      decoration: InputDecoration(
-                        labelText: "Стоимость",
-                        focusColor: Colors.white,
-                      ))),
-              DropdownButton(
-                  dropdownColor: Color.fromRGBO(110, 53, 76, 1),
-                  value: _productCategory,
-                  itemHeight: 80,
-                  underline: Container(
-                      height: 1, color: Color.fromRGBO(55, 50, 52, 1)),
-                  isExpanded: true,
-                  icon: Icon(Icons.arrow_downward,
-                      color: Color.fromRGBO(55, 50, 52, 1)),
-                  items: _buildItems(_categories),
-                  style: Theme.of(context).textTheme.body2,
-                  onChanged: (productCategory) {
-                    setState(() {
-                      this._productCategory = productCategory;
-                    });
-                  }),
-              Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 30),
-                  child: FlatButton(
-                      onPressed: () {
-                        StoreProduct storeProduct = StoreProduct();
-                        storeProduct.storeId = _store.id;
-                        storeProduct.picture = _picture;
-                        storeProduct.name = _productName;
-                        storeProduct.cost = double.parse(_productCost);
-                        storeProduct.categoryId = _categories
-                            .firstWhere(
-                                (element) => element.name == _productCategory)
-                            .id;
-
-                        if (_choosenStoreProduct.id == null) {
-                          storeProduct.id = 0;
-                          _addStoreProduct(storeProduct);
-                        } else {
-                          // storeProduct.id=_choosenStoreProduct.id;
-                          // _updateShop(storeProduct);
-                        }
-
-                        Navigator.pop(context);
-                      },
-                      padding: EdgeInsets.zero,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: new Text("Сохранить",
-                            style: Theme.of(context).textTheme.body2.copyWith(
-                                color: Color.fromRGBO(130, 147, 153, 1))),
-                      )))
-            ],
-          ),
-        ),
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }

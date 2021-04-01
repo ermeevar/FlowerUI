@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'file:///C:/Users/201706/Desktop/FlowerUI/lib/screens/store.widgets/store.main.menu.dart';
+import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/material.dart';
 
 class MyHttpOverrides extends HttpOverrides{

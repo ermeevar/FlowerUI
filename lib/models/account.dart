@@ -1,58 +1,38 @@
-class Account{
-  int _id;
-  String _login;
-  String _passwordHash;
-  String _salt;
-  String _role;
+import 'dart:convert';
 
-  int get id => _id;
-  String get login => _login;
-  String get passwordHash => _passwordHash;
-  String get salt => _salt;
-  String get role => _role;
 
-  Account(){}
+List<Account> accountFromJson(String str) => List<Account>.from(json.decode(str).map((x) => Account.fromJson(x)));
 
-  set id(int id){
-    _id = id;
-  }
-  set login(String login){
-    _login = login;
-  }
-  set passwordHash(String passwordHash){
-    _passwordHash = passwordHash;
-  }
-  set salt(String salt){
-    _salt = salt;
-  }
-  set role(String role){
-    _role = role;
-  }
+String accountToJson(List<Account> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-  Map<String, dynamic> toMap(){
-    var map = new Map<String, dynamic>();
+class Account {
+  Account({
+    this.id,
+    this.login,
+    this.passwordHash,
+    this.salt,
+    this.role,
+  });
 
-    map["id"] = _id;
-    map["login"] = _login;
-    map["passwordHash"] = _passwordHash;
-    map["salt"] = _salt;
-    map["role"] = _role;
+  int id;
+  String login;
+  String passwordHash;
+  dynamic salt;
+  String role;
 
-    return map;
-  }
+  factory Account.fromJson(Map<String, dynamic> json) => Account(
+    id: json["id"],
+    login: json["login"],
+    passwordHash: json["passwordHash"],
+    salt: json["salt"],
+    role: json["role"],
+  );
 
-  Account.fromObject(dynamic object){
-    this._id = object["id"];
-    this._login = object["login"];
-    this._passwordHash = object["passwordHash"];
-    this._salt = object["salt"];
-    this._role = object["role"];
-    //
-    // print(_id);
-    // print(_name);
-    // print(_description);
-    // print(_picture);
-    // print(_firstPhone);
-    // print(_secondPhone);
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "login": login,
+    "passwordHash": passwordHash,
+    "salt": salt,
+    "role": role,
+  };
 }

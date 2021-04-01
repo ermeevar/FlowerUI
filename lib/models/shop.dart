@@ -25,7 +25,6 @@ class Shop {
   );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
     "address": address,
     "storeId": storeId,
     "accountId": accountId,

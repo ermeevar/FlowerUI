@@ -1,34 +1,62 @@
-class Order{
-  int _id;
-  String _name;
-  String _state;
+import 'dart:convert';
+import 'package:flower_ui/models/shop.dart';
 
-  Order(this._name, this._state);
+List<Order> orderFromJson(String str) => List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
+String orderToJson(List<Order> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-  int get id => _id;
-  String get name => _name;
-  String get state => _state;
 
-  set name(String name){
-    _name = name;
-  }
-  set state(String state){
-    _state = state;
-  }
+class Order {
+  Order({
+    this.id,
+    this.start,
+    this.finish,
+    this.isRandom,
+    this.orderStatusId,
+    this.userId,
+    this.cost,
+    this.card,
+    this.bouquetId,
+    this.templateId,
+    this.shopId,
+  });
 
-  Map<String, dynamic> toMap(){
-    var map = new Map<String, dynamic>();
+  int id;
+  DateTime start;
+  DateTime finish;
+  bool isRandom;
+  int orderStatusId;
+  int userId;
+  double cost;
+  String card;
+  int bouquetId;
+  int templateId;
+  int shopId;
 
-    map["id"] = _id;
-    map["name"] = _name;
-    map["state"] = _state;
+  factory Order.fromJson(Map<String, dynamic> json) => Order(
+    id: json["id"],
+    start: DateTime.parse(json["start"]),
+    finish: DateTime.parse(json["finish"]),
+    isRandom: json["isRandom"],
+    orderStatusId: json["orderStatusId"],
+    userId: json["userId"],
+    bouquetId: json["bouquetId"],
+    templateId: json["templateId"],
+    shopId: json["shopId"],
+    card: json["card"],
+    cost: json["cost"].toDouble(),
+  );
 
-    return map;
-  }
+  Map<String, dynamic> toJson() => {
+    "start": start.toIso8601String(),
+    "finish": finish.toIso8601String(),
+    "isRandom": isRandom,
+    "orderStatusId": orderStatusId,
+    "userId": userId,
+    "bouquetId": bouquetId,
+    "templateId": templateId,
+    "shopId": shopId,
+    "card": card,
+    "cost": cost,
+  };
 
-  Order.fromObject(dynamic object){
-    this._id = object["id"];
-    this._name = object["name"];
-    this._state = object["state"];
-  }
 }
