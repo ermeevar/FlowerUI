@@ -6,11 +6,11 @@ import 'package:flower_ui/screens/store.widgets/store.information.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class StoreMainMenu extends StatelessWidget {
+class StoreMainMenu extends StatefulWidget {
   static Store store;
   static Account account;
 
-  StoreMainMenu() {
+    StoreMainMenu() {
     store = Store();
     store.id = 1;
     store.name = "Букет столицы";
@@ -19,6 +19,15 @@ class StoreMainMenu extends StatelessWidget {
 
     account = Account();
     account.id = 1;
+  }
+
+  StoreMainMenuState createState () => StoreMainMenuState();
+}
+
+class StoreMainMenuState extends State<StoreMainMenu>{
+
+  StoreMainMenuState(){
+    checkConnection();
   }
 
   checkConnection() async {
@@ -66,9 +75,10 @@ class StoreMainMenu extends StatelessWidget {
           color: Colors.white,
           alignment: Alignment.center,
           child: Column(children: <Widget>[
-            StoreInformation(store),
+            StoreInformation(StoreMainMenu.store),
             StoreContent(),
           ])),
     );
   }
+
 }

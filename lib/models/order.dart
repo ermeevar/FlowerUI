@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flower_ui/models/shop.dart';
 
 List<Order> orderFromJson(String str) => List<Order>.from(json.decode(str).map((x) => Order.fromJson(x)));
 String orderToJson(List<Order> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
@@ -47,6 +46,20 @@ class Order {
   );
 
   Map<String, dynamic> toJson() => {
+    "start": start.toIso8601String(),
+    "finish": finish.toIso8601String(),
+    "isRandom": isRandom,
+    "orderStatusId": orderStatusId,
+    "userId": userId,
+    "bouquetId": bouquetId,
+    "templateId": templateId,
+    "shopId": shopId,
+    "card": card,
+    "cost": cost,
+  };
+
+  Map<String, dynamic> toJsonPut() => {
+    "id": id,
     "start": start.toIso8601String(),
     "finish": finish.toIso8601String(),
     "isRandom": isRandom,

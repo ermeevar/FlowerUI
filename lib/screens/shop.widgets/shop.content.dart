@@ -4,6 +4,7 @@ import 'package:flower_ui/models/order.dart';
 import 'package:flower_ui/models/order.status.dart';
 import 'package:flower_ui/models/shop.dart';
 import 'package:flower_ui/models/web.api.services.dart';
+import 'package:flower_ui/screens/order.widgets/order.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -51,8 +52,7 @@ class ShopContentState extends State<ShopContent>
   }
 
   OrderStatus _getOrderStatusById(int orderStatusId) {
-    return _orderStatuses
-        .firstWhere((element) => element.id == orderStatusId);
+    return _orderStatuses.firstWhere((element) => element.id == orderStatusId);
   }
 
   double roundDouble(double value, int places) {
@@ -94,71 +94,86 @@ class ShopContentState extends State<ShopContent>
                 ),
                 itemCount: _orders.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderMainMenu(_orders[index])));
+                    },
                     child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundImage: NetworkImage(
-                                'https://www.meme-arsenal.com/memes/70c29cb4ca092108a7b2084a24af52f6.jpg'),
-                            backgroundColor: Colors.transparent,
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "№ " + _orders[index].id.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .body1
-                                        .copyWith(
-                                            fontSize: 25),
-                                  ),
-                                  Text(
-                                      DateFormat('Заказ на dd.MM.yyyy hh:mm')
-                                          .format(_orders[index].finish)
-                                          .toString(),
-                                      style: Theme.of(context).textTheme.body1),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        _getOrderStatusById(_orders[index].orderStatusId).name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .body1
-                                            .copyWith(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromRGBO(110, 53, 76, 1),
-                                            ),
-                                      ),
-                                      Text(
-                                        roundDouble(_orders[index].cost, 2).toString() + " ₽",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .body1
-                                            .copyWith(
-                                              height: 2,
-                                              fontWeight: FontWeight.bold,
-                                              color: Color.fromRGBO(110, 53, 76, 1),
-                                            ),
-                                      ),
-                                    ],
-                                  )
-                                ],
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundImage: NetworkImage(
+                                  'https://www.meme-arsenal.com/memes/70c29cb4ca092108a7b2084a24af52f6.jpg'),
+                              backgroundColor: Colors.transparent,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "№ " + _orders[index].id.toString(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .body1
+                                          .copyWith(fontSize: 25),
+                                    ),
+                                    Text(
+                                        DateFormat('Заказ на dd.MM.yyyy hh:mm')
+                                            .format(_orders[index].finish)
+                                            .toString(),
+                                        style:
+                                            Theme.of(context).textTheme.body1),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          _getOrderStatusById(
+                                                  _orders[index].orderStatusId)
+                                              .name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .body1
+                                              .copyWith(
+                                                height: 2,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    110, 53, 76, 1),
+                                              ),
+                                        ),
+                                        Text(
+                                          roundDouble(_orders[index].cost, 2)
+                                                  .toString() +
+                                              " ₽",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .body1
+                                              .copyWith(
+                                                height: 2,
+                                                fontWeight: FontWeight.bold,
+                                                color: Color.fromRGBO(
+                                                    110, 53, 76, 1),
+                                              ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   );

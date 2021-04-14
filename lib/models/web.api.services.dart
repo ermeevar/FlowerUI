@@ -5,6 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flower_ui/models/product.dart';
 import 'package:flower_ui/models/shop.dart';
 
+import 'order.dart';
+
 class WebApiServices {
   static Dio dio = Dio();
 
@@ -24,6 +26,7 @@ class WebApiServices {
   static String _templateUrl = _baseUrl + "/templates/";
   static String _templateCategoryUrl = _baseUrl + "/templatecategories/";
   static String _productCategoryUrl = _baseUrl + "/productcategories/";
+  static String _userUrl = _baseUrl + "/users/";
 
   WebApiServices() {
     dio.interceptors.add(
@@ -112,6 +115,13 @@ class WebApiServices {
     );
   }
 
+  static Future fetchUsers() async {
+    return await Dio().get<String>(
+      _userUrl,
+      options: buildCacheOptions(Duration(days: 1)),
+    );
+  }
+
   static Future postShop(Shop shop) async {
     var reverseShop = shop.toJson();
     var shopJson = json.encode(reverseShop);
@@ -153,6 +163,14 @@ class WebApiServices {
     var productJson = json.encode(productShop);
     var response = await dio.put(_productUrl + product.id.toString(),
         queryParameters: header, data: productJson);
+    return response.statusCode;
+  }
+
+  static Future putOrder(Order order) async {
+    var orderShop = order.toJsonPut();
+    var orderJson = json.encode(orderShop);
+    var response = await dio.put(_orderUrl + order.id.toString(),
+        queryParameters: header, data: orderJson);
     return response.statusCode;
   }
 }
