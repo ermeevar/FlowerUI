@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/material.dart';
 
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      home: StoreMainMenu(),
+      home: AuthorizationMainMenu(),
     );
   }
 }
