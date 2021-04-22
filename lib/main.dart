@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/material.dart';
@@ -23,12 +24,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: TextTheme(
           body1: TextStyle(
-              fontSize: 19,
+              fontSize: 15,
               fontFamily: "SourceSansPro",
               color: Color.fromRGBO(55, 50, 52, 1),
               decoration: TextDecoration.none),
           body2: TextStyle(
-              fontSize: 19,
+              fontSize: 15,
               fontFamily: "SourceSansPro",
               color: Colors.white,
               decoration: TextDecoration.none),
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
               decoration: TextDecoration.none),
           subtitle: TextStyle(
-              fontSize: 19,
+              fontSize: 20,
               fontFamily: "Philosopher",
               color: Color.fromRGBO(110, 53, 76, 1),
               fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      home: AuthorizationMainMenu(),
+      home: StoreMainMenu(),
     );
   }
 }

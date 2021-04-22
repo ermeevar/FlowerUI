@@ -1,12 +1,11 @@
-import 'package:flower_ui/screens/registration.widgets/registration.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class AuthorizationMainMenu extends StatefulWidget {
-  AuthorizationMainMenuState createState() => AuthorizationMainMenuState();
+class RegistrationMainMenu extends StatefulWidget {
+  RegistrationMainMenuState createState() => RegistrationMainMenuState();
 }
 
-class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
+class RegistrationMainMenuState extends State<RegistrationMainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +74,16 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
               ),
             ),
           ),
+          Positioned(
+            top: 70,
+            left: 30,
+            child: IconButton(
+                icon: Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          ),
           Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,11 +91,33 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
               children: [
                 Spacer(),
                 Text(
-                  "Вход",
+                  "Регистрация",
                   style: Theme.of(context).textTheme.title,
                 ),
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 40),
+                  child: TextFormField(
+                      onChanged: (secondPhone) {},
+                      cursorColor: Colors.white,
+                      style: Theme.of(context).textTheme.body2,
+                      decoration: InputDecoration(
+                        labelText: "Наименование сети",
+                        focusColor: Colors.white,
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+                  child: TextFormField(
+                      onChanged: (secondPhone) {},
+                      cursorColor: Colors.white,
+                      style: Theme.of(context).textTheme.body2,
+                      decoration: InputDecoration(
+                        labelText: "Телефон",
+                        focusColor: Colors.white,
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40, left: 40, top: 20),
                   child: TextFormField(
                       onChanged: (secondPhone) {},
                       cursorColor: Colors.white,
@@ -97,7 +128,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                       )),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 40, left: 40, top: 30),
+                  padding: EdgeInsets.only(right: 40, left: 40, top: 20),
                   child: TextFormField(
                       onChanged: (secondPhone) {},
                       cursorColor: Colors.white,
@@ -108,8 +139,20 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                         fillColor: Colors.white,
                       )),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+                  child: TextFormField(
+                      onChanged: (secondPhone) {},
+                      cursorColor: Colors.white,
+                      style: Theme.of(context).textTheme.body2,
+                      decoration: InputDecoration(
+                        labelText: "Повторите пароль",
+                        focusColor: Colors.white,
+                        fillColor: Colors.white,
+                      )),
+                ),
                 Container(
-                  padding: EdgeInsets.only(top: 80),
+                  padding: EdgeInsets.only(top: 50),
                   child: FlatButton(
                       onPressed: () {},
                       padding: EdgeInsets.zero,
@@ -121,31 +164,12 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(40))),
                         child: new Text(
-                          "ВОЙТИ",
+                          "СОХРАНИТЬ",
                           style: Theme.of(context).textTheme.body2.copyWith(
                                 color: Color.fromRGBO(110, 53, 76, 1),
                               ),
                         ),
                       )),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  child: FlatButton(
-                    onPressed: (){
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegistrationMainMenu()),
-                      );
-                    },
-                    padding: EdgeInsets.zero,
-                    child: new Text(
-                      "Зарегистрироваться",
-                      style: Theme.of(context).textTheme.body2.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
                 ),
                 Spacer(),
               ],
