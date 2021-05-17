@@ -29,6 +29,13 @@ class Account {
   );
 
   Map<String, dynamic> toJson() => {
+    "login": login,
+    "passwordHash": passwordHash,
+    "salt": salt,
+    "role": role,
+  };
+
+  Map<String, dynamic> toJsonUpdate() => {
     "id": id,
     "login": login,
     "passwordHash": passwordHash,

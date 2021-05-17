@@ -4,7 +4,9 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:dio/dio.dart';
 import 'package:flower_ui/models/product.dart';
 import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/models/store.dart';
 
+import 'account.dart';
 import 'order.dart';
 
 class WebApiServices {
@@ -132,11 +134,29 @@ class WebApiServices {
     return response.statusCode;
   }
 
+  static Future postStore(Store store) async {
+    var reverseStore = store.toJson();
+    var storeJson = json.encode(reverseStore);
+    var response = await dio.post(_storeUrl,
+        options: Options(
+            headers: {HttpHeaders.contentTypeHeader: "application/json"}),
+        data: storeJson);
+    return response.statusCode;
+  }
+
   static Future postProduct(Product product) async {
     var reverseProduct = product.toJson();
     var productJson = json.encode(reverseProduct);
     var response = await dio.post(_productUrl,
         options: Options(headers: header), data: productJson);
+    return response.statusCode;
+  }
+
+  static Future postAccount(Account account) async {
+    var reverseAccount = account.toJson();
+    var accountJson = json.encode(reverseAccount);
+    var response = await dio.post(_accountUrl,
+        options: Options(headers: header), data: accountJson);
     return response.statusCode;
   }
 

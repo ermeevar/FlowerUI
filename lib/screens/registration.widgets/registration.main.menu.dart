@@ -1,11 +1,22 @@
+import 'package:flower_ui/models/account.dart';
+import 'package:flower_ui/models/store.dart';
+import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:crypt/crypt.dart';
+import 'package:crypt/crypt.dart';
 
 class RegistrationMainMenu extends StatefulWidget {
   RegistrationMainMenuState createState() => RegistrationMainMenuState();
 }
 
 class RegistrationMainMenuState extends State<RegistrationMainMenu> {
+  String name;
+  String phone;
+  String login;
+  String password;
+  List<Account> _accounts = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,7 +108,11 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 40),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (name) {
+                        setState(() {
+                          this.name = name;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -108,7 +123,11 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 20),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (phone) {
+                        setState(() {
+                          this.phone = phone;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -119,7 +138,11 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 20),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (login) {
+                        setState(() {
+                          this. login = login;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -130,7 +153,11 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 20),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (password) {
+                        setState(() {
+                          this.password = password;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -139,22 +166,13 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                         fillColor: Colors.white,
                       )),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(right: 40, left: 40, top: 20),
-                  child: TextFormField(
-                      onChanged: (secondPhone) {},
-                      cursorColor: Colors.white,
-                      style: Theme.of(context).textTheme.body2,
-                      decoration: InputDecoration(
-                        labelText: "Повторите пароль",
-                        focusColor: Colors.white,
-                        fillColor: Colors.white,
-                      )),
-                ),
                 Container(
                   padding: EdgeInsets.only(top: 50),
                   child: FlatButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await setAccountStore();
+                        Navigator.pop(context);
+                      },
                       padding: EdgeInsets.zero,
                       child: Container(
                         padding:
@@ -202,5 +220,43 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
         ],
       ),
     );
+  }
+
+  RegistrationMainMenuState(){
+    getAccounts();
+  }
+
+  getAccounts() async{
+    await WebApiServices.fetchAccount().then((response) {
+      var accountsData = accountFromJson(response.data);
+      setState(() {
+        _accounts = accountsData;
+      });
+    });
+  }
+
+  setAccountStore() async{
+    for(var item in _accounts){
+      if(item.login == this.login)
+        return;
+    }
+
+    final crypt = Crypt.sha256(password);
+
+    Account acc= Account();
+    acc.passwordHash = crypt.hash;
+    acc.salt = crypt.salt;
+    acc.login =login;
+    acc.role = "store";
+
+    await WebApiServices.postAccount(acc);
+    await getAccounts();
+    acc = _accounts.first;
+
+    Store store = Store();
+    store.accountId = acc.id;
+    store.firstPhone = phone;
+    store.name = name;
+    await WebApiServices.postStore(store);
   }
 }

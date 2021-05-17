@@ -1,12 +1,34 @@
+import 'package:flower_ui/models/account.dart';
+import 'package:flower_ui/models/store.dart';
+import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/registration.widgets/registration.main.menu.dart';
+import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:crypt/crypt.dart';
 
 class AuthorizationMainMenu extends StatefulWidget {
   AuthorizationMainMenuState createState() => AuthorizationMainMenuState();
 }
 
 class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
+  String login;
+  String password;
+  List<Account> _accounts = [];
+
+  AuthorizationMainMenuState(){
+    getAccounts();
+  }
+
+  getAccounts() async{
+    await WebApiServices.fetchAccount().then((response) {
+      var accountsData = accountFromJson(response.data);
+      setState(() {
+        _accounts = accountsData;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +110,11 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 40),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (login) {
+                        setState(() {
+                          this.login = login;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -99,7 +125,11 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                 Padding(
                   padding: EdgeInsets.only(right: 40, left: 40, top: 30),
                   child: TextFormField(
-                      onChanged: (secondPhone) {},
+                      onChanged: (password) {
+                        setState(() {
+                          this.password = password;
+                        });
+                      },
                       cursorColor: Colors.white,
                       style: Theme.of(context).textTheme.body2,
                       decoration: InputDecoration(
@@ -111,7 +141,32 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                 Container(
                   padding: EdgeInsets.only(top: 80),
                   child: FlatButton(
-                      onPressed: () {},
+                      onPressed: () async{
+                        Store accStore;
+                        accStore =  await searchAccountStore();
+
+                        if(accStore == null){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Цветочная сеть не найдена", style: Theme.of(context).textTheme.body2,),
+                              action: SnackBarAction(
+                                label: "Понятно",
+                                onPressed: () {
+                                  // Code to execute.
+                                },
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  StoreMainMenu()),
+                        );
+                      },
                       padding: EdgeInsets.zero,
                       child: Container(
                         padding:
@@ -178,5 +233,19 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
         ],
       ),
     );
+  }
+
+  Future<Store> searchAccountStore() async{
+    var insertAccount = _accounts.firstWhere((element) => element.login == login);
+
+    final crypt = Crypt.sha256(password, salt: insertAccount.salt);
+
+    if(crypt.hash != insertAccount.passwordHash)
+      return null;
+
+    await WebApiServices.fetchStore().then((response) {
+      var storeData = storeFromJson(response.data);
+      return storeData.firstWhere((element) => element.accountId == insertAccount.id);
+    });
   }
 }

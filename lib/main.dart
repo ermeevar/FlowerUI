@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      home: StoreMainMenu(),
+      home: AuthorizationMainMenu(),
     );
   }
 }

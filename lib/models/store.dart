@@ -34,6 +34,15 @@ class Store {
   );
 
   Map<String, dynamic> toJson() => {
+    "name": name,
+    "description": description.toString(),
+    "picture": picture.toList(),
+    "firstPhone": firstPhone,
+    "secondPhone": secondPhone,
+    "accountId": accountId,
+  };
+
+  Map<String, dynamic> toJsonUpdate() => {
     "id": id,
     "name": name,
     "description": description.toString(),
