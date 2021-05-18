@@ -1,4 +1,5 @@
 import 'package:flower_ui/models/account.dart';
+import 'package:flower_ui/models/profile.info.dart';
 import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/registration.widgets/registration.main.menu.dart';
@@ -6,21 +7,21 @@ import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:crypt/crypt.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthorizationMainMenu extends StatefulWidget {
   AuthorizationMainMenuState createState() => AuthorizationMainMenuState();
 }
 
 class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
-  String login;
-  String password;
+  Account _account = Account();
   List<Account> _accounts = [];
 
-  AuthorizationMainMenuState(){
+  AuthorizationMainMenuState() {
     getAccounts();
   }
 
-  getAccounts() async{
+  getAccounts() async {
     await WebApiServices.fetchAccount().then((response) {
       var accountsData = accountFromJson(response.data);
       setState(() {
@@ -32,6 +33,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         overflow: Overflow.clip,
         children: [
@@ -112,7 +114,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                   child: TextFormField(
                       onChanged: (login) {
                         setState(() {
-                          this.login = login;
+                          this._account.login = login;
                         });
                       },
                       cursorColor: Colors.white,
@@ -127,7 +129,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                   child: TextFormField(
                       onChanged: (password) {
                         setState(() {
-                          this.password = password;
+                          this._account.passwordHash = password;
                         });
                       },
                       cursorColor: Colors.white,
@@ -141,14 +143,16 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                 Container(
                   padding: EdgeInsets.only(top: 80),
                   child: FlatButton(
-                      onPressed: () async{
-                        Store accStore;
-                        accStore =  await searchAccountStore();
+                      onPressed: () async {
+                        Store accStore = await getStore(_account);
 
-                        if(accStore == null){
+                        if (accStore == null) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("Цветочная сеть не найдена", style: Theme.of(context).textTheme.body2,),
+                              content: Text(
+                                "Цветочная сеть не найдена",
+                                style: Theme.of(context).textTheme.body2,
+                              ),
                               action: SnackBarAction(
                                 label: "Понятно",
                                 onPressed: () {
@@ -163,8 +167,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  StoreMainMenu()),
+                              builder: (context) => StoreMainMenu()),
                         );
                       },
                       padding: EdgeInsets.zero,
@@ -186,7 +189,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
                 Container(
                   margin: EdgeInsets.only(top: 20),
                   child: FlatButton(
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -235,17 +238,50 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
     );
   }
 
-  Future<Store> searchAccountStore() async{
-    var insertAccount = _accounts.firstWhere((element) => element.login == login);
+  Future<Account> getAccount(Account account) async {
+    Account accountBD;
 
-    final crypt = Crypt.sha256(password, salt: insertAccount.salt);
+    await WebApiServices.fetchAccount().then((response) {
+      var accountData = accountFromJson(response.data);
+      accountBD = accountData.firstWhere((element) =>
+          element.login == account.login && element.role == "store");
+    });
+    if (accountBD == null) return null;
 
-    if(crypt.hash != insertAccount.passwordHash)
+    final crypto = Crypt.sha256(account.passwordHash, salt: accountBD.salt);
+
+    if (accountBD.passwordHash == crypto.hash) {
+      return accountBD;
+    } else
       return null;
+  }
 
+  Future<Store> getStore(Account account) async {
+    Account accountBD = await getAccount(account);
+
+    if (accountBD == null) return null;
+
+    Store store;
     await WebApiServices.fetchStore().then((response) {
       var storeData = storeFromJson(response.data);
-      return storeData.firstWhere((element) => element.accountId == insertAccount.id);
+      store =
+          storeData.firstWhere((element) => element.accountId == accountBD.id);
     });
+
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    print(accountBD.id);
+    print(store.id);
+
+    prefs.setInt("AccountId", accountBD.id);
+    prefs.setInt("StoreId", store.id);
+
+    print(prefs.getInt('AccountId'));
+    print(prefs.getInt('StoreId'));
+    // ProfileInfo.account = accountBD;
+    // ProfileInfo.store = store;
+
+    return store;
   }
 }

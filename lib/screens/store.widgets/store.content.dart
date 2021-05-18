@@ -1,4 +1,5 @@
 import 'package:flower_ui/models/product.category.dart';
+import 'package:flower_ui/models/profile.info.dart';
 import 'package:flower_ui/models/shop.dart';
 import 'package:flower_ui/models/web.api.services.dart';
 import 'package:flower_ui/screens/shop.widgets/shop.main.menu.dart';
@@ -32,7 +33,7 @@ class StoreContentState extends State<StoreContent>
       var shopsData = shopFromJson(response.data);
       setState(() {
         _shops = shopsData
-            .where((element) => element.storeId == StoreMainMenu.store.id)
+            .where((element) => element.storeId == ProfileInfo.store.id)
             .toList();
       });
     });
@@ -43,7 +44,7 @@ class StoreContentState extends State<StoreContent>
       var productsData = productFromJson(response.data);
       setState(() {
         _products = productsData
-            .where((element) => element.storeId == StoreMainMenu.store.id)
+            .where((element) => element.storeId == ProfileInfo.store.id)
             .toList();
       });
     });
@@ -447,8 +448,8 @@ class StoreContentState extends State<StoreContent>
                 padding: EdgeInsets.only(top: 30),
                 child: FlatButton(
                   onPressed: () async {
-                    _shop.storeId = StoreMainMenu.store.id;
-                    _shop.accountId = StoreMainMenu.account.id;
+                    _shop.storeId = ProfileInfo.store.id;
+                    _shop.accountId = ProfileInfo.account.id;
                     if (_shop.id == null) {
                       await WebApiServices.postShop(_shop);
                     } else
@@ -568,7 +569,7 @@ class StoreContentState extends State<StoreContent>
                   padding: EdgeInsets.only(top: 30),
                   child: FlatButton(
                     onPressed: () async {
-                      _product.storeId = StoreMainMenu.store.id;
+                      _product.storeId = ProfileInfo.store.id;
 
                       if (_product.id == null)
                         await WebApiServices.postProduct(_product);

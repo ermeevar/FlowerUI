@@ -11,15 +11,14 @@ class RegistrationMainMenu extends StatefulWidget {
 }
 
 class RegistrationMainMenuState extends State<RegistrationMainMenu> {
-  String name;
-  String phone;
-  String login;
-  String password;
+  Store _store= Store();
+  Account _account = Account();
   List<Account> _accounts = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         overflow: Overflow.clip,
         children: [
@@ -110,7 +109,7 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                   child: TextFormField(
                       onChanged: (name) {
                         setState(() {
-                          this.name = name;
+                          this._store.name = name;
                         });
                       },
                       cursorColor: Colors.white,
@@ -125,7 +124,7 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                   child: TextFormField(
                       onChanged: (phone) {
                         setState(() {
-                          this.phone = phone;
+                          this._store.firstPhone = phone;
                         });
                       },
                       cursorColor: Colors.white,
@@ -140,7 +139,7 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                   child: TextFormField(
                       onChanged: (login) {
                         setState(() {
-                          this. login = login;
+                          this._account.login = login;
                         });
                       },
                       cursorColor: Colors.white,
@@ -155,7 +154,7 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                   child: TextFormField(
                       onChanged: (password) {
                         setState(() {
-                          this.password = password;
+                          this._account.passwordHash = password;
                         });
                       },
                       cursorColor: Colors.white,
@@ -170,8 +169,21 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
                   padding: EdgeInsets.only(top: 50),
                   child: FlatButton(
                       onPressed: () async {
-                        await setAccountStore();
-                        Navigator.pop(context);
+                        if(await addStore(_account, _store) == true)
+                          Navigator.pop(context);
+                        else
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Произошла ошибка", style: Theme.of(context).textTheme.body2,),
+                              action: SnackBarAction(
+                                label: "Понятно",
+                                onPressed: () {
+                                  // Code to execute.
+                                },
+                              ),
+                            ),
+                          );
+
                       },
                       padding: EdgeInsets.zero,
                       child: Container(
@@ -230,33 +242,26 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
     await WebApiServices.fetchAccount().then((response) {
       var accountsData = accountFromJson(response.data);
       setState(() {
-        _accounts = accountsData;
+        _accounts = accountsData.toList();
       });
     });
   }
 
-  setAccountStore() async{
-    for(var item in _accounts){
-      if(item.login == this.login)
-        return;
+  Future<bool> addStore(Account account, Store store) async {
+    final crypto = Crypt.sha256(account.passwordHash);
+    account.passwordHash = crypto.hash;
+    account.salt = crypto.salt;
+    account.role = "store";
+
+    for (var item in _accounts) {
+      if (item.login == _account.login) return false;
     }
 
-    final crypt = Crypt.sha256(password);
-
-    Account acc= Account();
-    acc.passwordHash = crypt.hash;
-    acc.salt = crypt.salt;
-    acc.login =login;
-    acc.role = "store";
-
-    await WebApiServices.postAccount(acc);
+    await WebApiServices.postAccount(_account);
     await getAccounts();
-    acc = _accounts.first;
 
-    Store store = Store();
-    store.accountId = acc.id;
-    store.firstPhone = phone;
-    store.name = name;
+    store.accountId = _accounts.toList().last.id;
     await WebApiServices.postStore(store);
+    return true;
   }
 }

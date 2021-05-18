@@ -1,40 +1,22 @@
+import 'package:flower_ui/models/profile.info.dart';
 import 'package:flower_ui/models/store.dart';
+import 'package:flower_ui/models/web.api.services.dart';
+import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StoreInformation extends StatefulWidget{
-  Store store;
-
-  StoreInformation(Store store){
-    this.store=store;
-  }
-
   @override
-  StoreInformationState createState() => StoreInformationState(store);
+  StoreInformationState createState() => StoreInformationState();
 }
 
 class StoreInformationState extends State<StoreInformation>
     with SingleTickerProviderStateMixin{
-  Store store;
-  String name = "";
-  String firstPhone = "";
-  String secondFhone = "";
-
-  StoreInformationState(Store store){
-    this.store=store;
-  }
-
   bool _isTab = false;
 
   void _taped(){
     setState(() {
       _isTab = !_isTab;
-    });
-  }
-  void _save(){
-    setState(() {
-      store.name = name;
-      store.firstPhone = firstPhone;
-      secondFhone!=null? store.secondPhone = secondFhone : "";
     });
   }
 
@@ -72,11 +54,11 @@ class StoreInformationState extends State<StoreInformation>
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              store.name!=null?Text(store.name,
+              ProfileInfo.store.name!=null?Text(ProfileInfo.store.name,
                   style: Theme.of(context).textTheme.title): Text(""),
-              store.firstPhone!=null?Text(store.firstPhone,
+              ProfileInfo.store.firstPhone!=null?Text(ProfileInfo.store.firstPhone,
                   style: Theme.of(context).textTheme.body2.copyWith(height: 2)):Text(""),
-              store.secondPhone!=null?Text(store.secondPhone,
+              ProfileInfo.store.secondPhone!=null?Text(ProfileInfo.store.secondPhone,
                   style: Theme.of(context).textTheme.body2) : Text(""),
               new FlatButton(
                   onPressed: () {
@@ -124,7 +106,9 @@ class StoreInformationState extends State<StoreInformation>
                             color: Colors.white,
                           ),
                           FlatButton(
-                              onPressed: null,
+                              onPressed: ()async{
+                                await onAuthorizationPage();
+                              },
                               padding: EdgeInsets.zero,
                               child: new Text("Выйти",
                                   style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
@@ -136,7 +120,10 @@ class StoreInformationState extends State<StoreInformation>
                         children: [
                           Icon(Icons.delete, color: Colors.white),
                           new FlatButton(
-                              onPressed: null,
+                              onPressed: () async{
+                                await WebApiServices.deleteAccount(ProfileInfo.account.id);
+                                await onAuthorizationPage();
+                              },
                               padding: EdgeInsets.zero,
                               child: new Text("Удалить",
                                   style: Theme.of(context).textTheme.body1.copyWith(color: Colors.white)
@@ -158,12 +145,12 @@ class StoreInformationState extends State<StoreInformation>
             child: TextFormField(
                 onChanged: (name){
                   setState(() {
-                    this.name=name;
+                    ProfileInfo.store.name=name;
                   });
                 },
                 cursorColor: Colors.white,
                 key: Key("name"),
-                initialValue: store.name != null ? store.name : "",
+                initialValue: ProfileInfo.store.name != null ? ProfileInfo.store.name : "",
                 style: Theme.of(context).textTheme.body2,
                 decoration: InputDecoration(
                   labelText: "Наименование",
@@ -176,11 +163,11 @@ class StoreInformationState extends State<StoreInformation>
             child: TextFormField(
                 onChanged: (firstPhone){
                   setState(() {
-                    this.firstPhone=firstPhone;
+                    ProfileInfo.store.firstPhone=firstPhone;
                   });
                 },
                 cursorColor: Colors.white,
-                initialValue: store.firstPhone != null ? store.firstPhone : "",
+                initialValue: ProfileInfo.store.firstPhone != null ? ProfileInfo.store.firstPhone : "",
                 style: Theme.of(context).textTheme.body2,
                 decoration: InputDecoration(
                   labelText: "Основной телефон",
@@ -193,11 +180,11 @@ class StoreInformationState extends State<StoreInformation>
             child: TextFormField(
                 onChanged: (secondPhone){
                   setState(() {
-                    this.secondFhone=secondPhone;
+                    ProfileInfo.store.secondPhone=secondPhone;
                   });
                 },
                 cursorColor: Colors.white,
-                initialValue: store.secondPhone != null ? store.secondPhone : "",
+                initialValue: ProfileInfo.store.secondPhone != null ? ProfileInfo.store.secondPhone : "",
                 style: Theme.of(context).textTheme.body2,
                 decoration: InputDecoration(
                   labelText: "Дополнительный телефон",
@@ -210,7 +197,6 @@ class StoreInformationState extends State<StoreInformation>
             child: FlatButton(
                 onPressed: (){
                   _taped();
-                  _save();
                 },
                 padding: EdgeInsets.zero,
                 child: Container(
@@ -226,6 +212,21 @@ class StoreInformationState extends State<StoreInformation>
             ),
           )
         ],
+      ),
+    );
+  }
+
+  onAuthorizationPage() async{
+    Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+    final SharedPreferences prefs = await _prefs;
+
+    prefs.setInt("AccountId", 0);
+    prefs.setInt("StoreId", 0);
+
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => AuthorizationMainMenu(),
       ),
     );
   }

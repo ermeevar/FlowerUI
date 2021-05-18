@@ -36,7 +36,7 @@ class Store {
   Map<String, dynamic> toJson() => {
     "name": name,
     "description": description.toString(),
-    "picture": picture.toList(),
+    "picture": picture,
     "firstPhone": firstPhone,
     "secondPhone": secondPhone,
     "accountId": accountId,

@@ -170,6 +170,16 @@ class WebApiServices {
     return response.statusCode;
   }
 
+  static Future deleteStore(int id) async {
+    var response = await dio.delete(_storeUrl + id.toString());
+    return response.statusCode;
+  }
+
+  static Future deleteAccount(int id) async {
+    var response = await dio.delete(_accountUrl + id.toString());
+    return response.statusCode;
+  }
+
   static Future putShop(Shop shop) async {
     var reverseShop = shop.toJsonPut();
     var shopJson = json.encode(reverseShop);
