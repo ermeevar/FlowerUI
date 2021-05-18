@@ -265,22 +265,14 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu> {
     await WebApiServices.fetchStore().then((response) {
       var storeData = storeFromJson(response.data);
       store =
-          storeData.firstWhere((element) => element.accountId == accountBD.id);
+          storeData.firstWhere((element) => element.accountId == accountBD.id, orElse: ()=>null);
     });
 
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
-    print(accountBD.id);
-    print(store.id);
-
     prefs.setInt("AccountId", accountBD.id);
     prefs.setInt("StoreId", store.id);
-
-    print(prefs.getInt('AccountId'));
-    print(prefs.getInt('StoreId'));
-    // ProfileInfo.account = accountBD;
-    // ProfileInfo.store = store;
 
     return store;
   }

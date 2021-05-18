@@ -61,21 +61,20 @@ class MyApp extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(30))))),
-      // home: FutureBuilder<bool>(
-      //     future: isAuthorized(),
-      //     builder: (context, snapshot) {
-      //       switch (snapshot.connectionState) {
-      //         case ConnectionState.waiting:
-      //           return Scaffold(
-      //             body: Center(
-      //               child: Text("Загрузка...", style: Theme.of(context).textTheme.body1,),
-      //             ),
-      //           );
-      //         case ConnectionState.done:
-      //           return snapshot.data ? StoreMainMenu() : AuthorizationMainMenu();
-      //       }
-      //     }),
-      home: AuthorizationMainMenu()
+      home: FutureBuilder<bool>(
+          future: isAuthorized(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return Scaffold(
+                  body: Center(
+                    child: Text("Загрузка...", style: Theme.of(context).textTheme.body1,),
+                  ),
+                );
+              case ConnectionState.done:
+                return snapshot.data ? StoreMainMenu() : AuthorizationMainMenu();
+            }
+          }),
     );
   }
 
