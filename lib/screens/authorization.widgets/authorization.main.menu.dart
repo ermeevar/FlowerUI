@@ -3,7 +3,7 @@ import 'package:flower_ui/entities/store.dart';
 import 'package:flower_ui/screens/registration.widgets/registration.main.menu.dart';
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flower_ui/states/connection.dart';
-import 'package:flower_ui/states/profile.info.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
