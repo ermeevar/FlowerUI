@@ -1,11 +1,9 @@
-import 'dart:math';
-
-import 'package:flower_ui/models/order.status.dart';
-import 'package:flower_ui/models/web.api.services.dart';
+import 'package:flower_ui/entities/order.status.dart';
+import 'package:flower_ui/states/web.api.services.dart';
 import 'package:flower_ui/screens/order.widgets/order.bouquet.content.dart';
 import 'package:flower_ui/screens/order.widgets/order.information.dart';
 import 'package:flutter/material.dart';
-import 'package:flower_ui/models/order.dart';
+import 'package:flower_ui/entities/order.dart';
 
 class OrderMainMenu extends StatefulWidget {
   Order order;
@@ -33,11 +31,6 @@ class OrderMainMenuState extends State<OrderMainMenu> {
     });
   }
 
-  double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
-    return ((value * mod).round().toDouble() / mod);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,20 +40,26 @@ class OrderMainMenuState extends State<OrderMainMenu> {
         child: Column(
           children: [
             _header(context),
-            Expanded(child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                OrderInformation(order),
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 30),
-                    child: OrderBouquetContent(order),
-                  ),
-                ),
-              ],
-            ),),
+            _body(),
           ],
         ),
+      ),
+    );
+  }
+
+  Expanded _body() {
+    return Expanded(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          OrderInformation(order),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 30),
+              child: OrderBouquetContent(order),
+            ),
+          ),
+        ],
       ),
     );
   }

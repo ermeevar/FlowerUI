@@ -30,7 +30,7 @@ class Shop {
     "accountId": accountId,
   };
 
-  Map<String, dynamic> toJsonPut() => {
+  Map<String, dynamic> toJsonUpdate() => {
     "id": id,
     "address": address,
     "storeId": storeId,

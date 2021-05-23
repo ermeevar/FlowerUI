@@ -1,21 +1,14 @@
 import 'dart:io';
-import 'package:flower_ui/models/store.dart';
 import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
+import 'package:flower_ui/states/certificate.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
-}
-
-void main() {
-  HttpOverrides.global = new MyHttpOverrides();
+void main() async{
+  HttpOverrides.global = new Certificate();
+  SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 
@@ -23,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
           textTheme: TextTheme(
             body1: TextStyle(
@@ -68,11 +62,16 @@ class MyApp extends StatelessWidget {
               case ConnectionState.waiting:
                 return Scaffold(
                   body: Center(
-                    child: Text("Загрузка...", style: Theme.of(context).textTheme.body1,),
+                    child: Text(
+                      "Загрузка...",
+                      style: Theme.of(context).textTheme.body1,
+                    ),
                   ),
                 );
               case ConnectionState.done:
-                return snapshot.data ? StoreMainMenu() : AuthorizationMainMenu();
+                return snapshot.data
+                    ? StoreMainMenu()
+                    : AuthorizationMainMenu();
             }
           }),
     );
@@ -82,8 +81,7 @@ class MyApp extends StatelessWidget {
     Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
-    if (prefs.getInt('AccountId') == null
-        || prefs.getInt('AccountId') == 0)
+    if (prefs.getInt('AccountId') == null || prefs.getInt('AccountId') == 0)
       return false;
     else
       return true;

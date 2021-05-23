@@ -37,4 +37,13 @@ class User {
     "picture": picture,
     "accountId": accountId,
   };
+
+  Map<String, dynamic> toJsonUpdate() => {
+    "id": id,
+    "surname": surname,
+    "name": name,
+    "phone": phone,
+    "picture": picture,
+    "accountId": accountId,
+  };
 }

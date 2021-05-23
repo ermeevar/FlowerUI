@@ -40,7 +40,7 @@ class Product {
     "storeId": storeId,
   };
 
-  Map<String, dynamic> toJsonPut() => {
+  Map<String, dynamic> toJsonUpdate() => {
     "id": id,
     "name": name,
     "picture": picture,

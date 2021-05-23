@@ -1,4 +1,4 @@
-import 'package:flower_ui/models/shop.dart';
+import 'package:flower_ui/entities/shop.dart';
 import 'package:flower_ui/screens/shop.widgets/shop.content.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,42 +12,57 @@ class ShopMainMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          color: Colors.white,
-          alignment: Alignment.center,
-          child: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.only(right: 25),
-                child: Expanded(child: Container(
-                        padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
-                        alignment: Alignment.topLeft,
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(130, 147, 153, 1),
-                            borderRadius: BorderRadius.only(
-                                bottomRight: Radius.circular(30)
-                            )
-                        ),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children:[
-                              IconButton(
-                                  icon: Icon(Icons.arrow_back_ios),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  }
-                              ),
-                              Expanded(child: Text(
-                                _shop.address,
-                                style: Theme.of(context).textTheme.subtitle.copyWith(color: Colors.white))),
-                            ]
-                        )
-                      ))
-                  ),
-              ShopContent(_shop)
-            ],
-          )
-      )
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Column(
+          children: [
+            getTitle(context),
+            ShopContent(_shop),
+          ],
+        ),
+      ),
     );
   }
+
+  //#region Title
+  Container getTitle(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(right: 25),
+      child: Expanded(
+        child: Container(
+          padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
+          alignment: Alignment.topLeft,
+          decoration: drawBackground(),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Expanded(
+                child: Text(
+                  _shop.address,
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle
+                      .copyWith(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration drawBackground() {
+    return BoxDecoration(
+        color: Color.fromRGBO(130, 147, 153, 1),
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(30)));
+  }
+  //#endregion
 }

@@ -58,7 +58,7 @@ class Order {
     "cost": cost,
   };
 
-  Map<String, dynamic> toJsonPut() => {
+  Map<String, dynamic> toJsonUpdate() => {
     "id": id,
     "start": start.toIso8601String(),
     "finish": finish.toIso8601String(),

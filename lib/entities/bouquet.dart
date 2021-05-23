@@ -33,4 +33,12 @@ class Bouquet {
     "storeId": storeId,
     "userId": userId,
   };
+
+  Map<String, dynamic> toJsonUpdate() => {
+    "id": id,
+    "name": name,
+    "cost": cost.toDouble(),
+    "storeId": storeId,
+    "userId": userId,
+  };
 }

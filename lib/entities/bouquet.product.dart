@@ -26,4 +26,10 @@ class BouquetProduct {
     "productId": productId,
     "bouquetId": bouquetId,
   };
+
+  Map<String, dynamic> toJsonUpdate() => {
+    "id": id,
+    "productId": productId,
+    "bouquetId": bouquetId,
+  };
 }
