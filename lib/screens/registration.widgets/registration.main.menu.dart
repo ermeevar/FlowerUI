@@ -1,6 +1,6 @@
 import 'package:flower_ui/entities/account.dart';
 import 'package:flower_ui/entities/store.dart';
-import 'package:flower_ui/states/profile.info.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

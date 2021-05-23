@@ -1,4 +1,4 @@
-import 'package:flower_ui/states/profile.info.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/states/web.api.services.dart';
 import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
 import 'package:flutter/material.dart';

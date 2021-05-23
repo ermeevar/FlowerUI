@@ -1,6 +1,6 @@
 import 'package:flower_ui/entities/product.category.dart';
 import 'package:flower_ui/states/divider.dart';
-import 'package:flower_ui/states/profile.info.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/entities/shop.dart';
 import 'package:flower_ui/states/spaceContainer.dart';
 import 'package:flower_ui/states/web.api.services.dart';

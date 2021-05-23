@@ -1,5 +1,4 @@
-import 'package:flower_ui/states/connection.dart';
-import 'package:flower_ui/states/profile.info.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/screens/store.widgets/store.content.dart';
 import 'package:flower_ui/screens/store.widgets/store.information.dart';
 import 'package:flower_ui/states/circleProgressBar.dart';
