@@ -19,6 +19,7 @@ class OrderBouquetContent extends StatefulWidget {
 }
 
 class OrderBouquetContentState extends State<OrderBouquetContent> {
+
   Order _order;
   List<Product> _products = [];
   List<Template> _templates = [];
@@ -127,8 +128,8 @@ class OrderBouquetContentState extends State<OrderBouquetContent> {
 
   Widget _bouquetList(context) {
     return ListView.builder(
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       shrinkWrap: true,
-      physics: ScrollPhysics(),
       padding: EdgeInsets.only(top: 10),
       itemCount: _products.length,
       itemBuilder: (context, index) {

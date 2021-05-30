@@ -1,4 +1,5 @@
 import 'package:flower_ui/entities/product.category.dart';
+import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flower_ui/states/divider.dart';
 import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/entities/shop.dart';
@@ -27,6 +28,14 @@ class StoreContentState extends State<StoreContent>
     _getShops();
     _getProductCategories();
     _getProducts();
+  }
+
+  Future<void> _refresh()async{
+    setState(() {
+      _getShops();
+      _getProductCategories();
+      _getProducts();
+    });
   }
 
   _getShops() async {
@@ -129,20 +138,25 @@ class StoreContentState extends State<StoreContent>
     );
   }
 
-  ListView buildShopList() {
-    return ListView.separated(
-        separatorBuilder: (context, index) => getDivider(),
-        itemCount: _shops.length + 1,
-        itemBuilder: (context, index) {
-          return index + 1 == _shops.length + 1
-              ? getSpaceContainer()
-              : ListTile(
-                  contentPadding: EdgeInsets.symmetric(vertical: 10),
-                  title: Text(_shops[index].address,
-                      style: Theme.of(context).textTheme.body1),
-                  trailing: getShopMenuButton(index),
-                );
-        });
+  Widget buildShopList() {
+    return RefreshIndicator(
+      color: Color.fromRGBO(110, 53, 76, 1),
+      key: StoreMainMenuState.refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: ListView.separated(
+          separatorBuilder: (context, index) => getDivider(),
+          itemCount: _shops.length + 1,
+          itemBuilder: (context, index) {
+            return index + 1 == _shops.length + 1
+                ? getSpaceContainer()
+                : ListTile(
+              contentPadding: EdgeInsets.symmetric(vertical: 10),
+              title: Text(_shops[index].address,
+                  style: Theme.of(context).textTheme.body1),
+              trailing: getShopMenuButton(index),
+            );
+          }),
+    );
   }
 
   PopupMenuButton<dynamic> getShopMenuButton(int index) {
@@ -381,15 +395,20 @@ class StoreContentState extends State<StoreContent>
     );
   }
 
-  ListView buildProductList() {
-    return ListView.separated(
-      separatorBuilder: (context, index) => getDivider(),
-      itemCount: _products.length + 1,
-      itemBuilder: (context, index) {
-        return index + 1 == _products.length + 1
-            ? getSpaceContainer()
-            : getProductItem(index, context);
-      },
+  Widget buildProductList() {
+    return RefreshIndicator(
+      color: Color.fromRGBO(110, 53, 76, 1),
+      key: StoreMainMenuState.refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: ListView.separated(
+        separatorBuilder: (context, index) => getDivider(),
+        itemCount: _products.length + 1,
+        itemBuilder: (context, index) {
+          return index + 1 == _products.length + 1
+              ? getSpaceContainer()
+              : getProductItem(index, context);
+        },
+      ),
     );
   }
 

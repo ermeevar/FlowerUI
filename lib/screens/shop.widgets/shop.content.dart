@@ -20,6 +20,8 @@ class ShopContent extends StatefulWidget {
 
 class ShopContentState extends State<ShopContent>
     with TickerProviderStateMixin {
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
   Shop _shop;
   List<Order> _orders = [];
   List<OrderStatus> _orderStatuses = [];
@@ -30,6 +32,13 @@ class ShopContentState extends State<ShopContent>
   }
 
   //#region GetData
+  Future<void> _refresh()async{
+    setState(() async{
+      await _getOrders();
+      await _getOrderStatuses();
+    });
+  }
+
   _getOrders() async {
     await WebApiServices.fetchOrders().then((response) {
       var ordersData = orderFromJson(response.data);
@@ -84,42 +93,47 @@ class ShopContentState extends State<ShopContent>
     );
   }
 
-  ListView _buildOrderList() {
-    return ListView.separated(
-      separatorBuilder: (context, index) => getDivider(),
-      itemCount: _orders.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderMainMenu(
-                  _orders[index],
+  Widget _buildOrderList() {
+    return RefreshIndicator(
+      color: Color.fromRGBO(110, 53, 76, 1),
+      key: refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: ListView.separated(
+        separatorBuilder: (context, index) => getDivider(),
+        itemCount: _orders.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => OrderMainMenu(
+                    _orders[index],
+                  ),
+                ),
+              );
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CircleAvatar(
+                      radius: 40,
+                      backgroundImage: NetworkImage(
+                          'https://www.meme-arsenal.com/memes/70c29cb4ca092108a7b2084a24af52f6.jpg'),
+                      backgroundColor: Colors.transparent,
+                    ),
+                    getOrderValueContent(index, context),
+                  ],
                 ),
               ),
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 5),
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundImage: NetworkImage(
-                        'https://www.meme-arsenal.com/memes/70c29cb4ca092108a7b2084a24af52f6.jpg'),
-                    backgroundColor: Colors.transparent,
-                  ),
-                  getOrderValueContent(index, context),
-                ],
-              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 

@@ -11,6 +11,9 @@ class StoreMainMenu extends StatefulWidget {
 
 class StoreMainMenuState extends State<StoreMainMenu>
     with SingleTickerProviderStateMixin {
+  static final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
