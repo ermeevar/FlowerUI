@@ -32,8 +32,15 @@ dependencies:
   crypt: ^3.0.1
   shared_preferences: ^2.0.5
   top_snackbar_flutter: ^1.0.0
+  flutter_launcher_icons: "^0.7.0"
 
-
+flutter_icons:
+  ios: true
+  android: true
+  image_path_ios: "resources/images/icon.png"
+  image_path_android: "resources/images/icon.png"
+  adaptive_icon_background: "resources/images/gradient.png"
+  adaptive_icon_foreground: "resources/images/logo.png"
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
