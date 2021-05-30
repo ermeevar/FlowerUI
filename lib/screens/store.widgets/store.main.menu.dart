@@ -4,6 +4,7 @@ import 'package:flower_ui/screens/store.widgets/store.information.dart';
 import 'package:flower_ui/states/circleProgressBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class StoreMainMenu extends StatefulWidget {
   StoreMainMenuState createState() => StoreMainMenuState();
@@ -13,6 +14,12 @@ class StoreMainMenuState extends State<StoreMainMenu>
     with SingleTickerProviderStateMixin {
   static final GlobalKey<RefreshIndicatorState> refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
 
   @override
   Widget build(BuildContext context) {

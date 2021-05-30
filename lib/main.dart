@@ -3,12 +3,10 @@ import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flower_ui/states/certificate.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async{
   HttpOverrides.global = new Certificate();
-  SystemChrome.setEnabledSystemUIOverlays([]);
   runApp(MyApp());
 }
 

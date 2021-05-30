@@ -83,7 +83,7 @@ class StoreContentState extends State<StoreContent>
             backgroundColor: Colors.white,
             elevation: 0,
             primary: false,
-            toolbarHeight: 40,
+            toolbarHeight: 60,
             bottom: getTabBar(context),
           ),
           body: TabBarView(

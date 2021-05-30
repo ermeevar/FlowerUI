@@ -6,6 +6,7 @@ import 'package:flower_ui/states/connection.dart';
 import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AuthorizationMainMenu extends StatefulWidget {
   AuthorizationMainMenuState createState() => AuthorizationMainMenuState();
@@ -14,6 +15,12 @@ class AuthorizationMainMenu extends StatefulWidget {
 class AuthorizationMainMenuState extends State<AuthorizationMainMenu>
     with SingleTickerProviderStateMixin {
   Account _account = Account();
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
 
   @override
   Widget build(BuildContext context) {
