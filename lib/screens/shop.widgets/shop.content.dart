@@ -70,7 +70,7 @@ class ShopContentState extends State<ShopContent>
         child: Scaffold(
           body: Container(
             color: Colors.white,
-            padding: EdgeInsets.only(left: 20, right: 20, top: 10),
+            padding: EdgeInsets.only(left: 20, right: 20),
             child: _ordersContent(context),
           ),
         ),
@@ -99,6 +99,7 @@ class ShopContentState extends State<ShopContent>
       key: refreshIndicatorKey,
       onRefresh: _refresh,
       child: ListView.separated(
+        padding: EdgeInsets.zero,
         separatorBuilder: (context, index) => getDivider(),
         itemCount: _orders.length,
         itemBuilder: (context, index) {

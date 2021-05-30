@@ -27,21 +27,23 @@ class ShopMainMenu extends StatelessWidget {
   //#region Title
   Container getTitle(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(right: 25),
+      padding: EdgeInsets.only(right: 25, left: 10),
       child: Expanded(
         child: Container(
           padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
           alignment: Alignment.topLeft,
-          decoration: drawBackground(),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                color: Colors.white,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+              SizedBox(
+                width: 30,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  color: Color.fromRGBO(130, 147, 153, 1),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
               ),
               Expanded(
                 child: Text(
@@ -49,7 +51,7 @@ class ShopMainMenu extends StatelessWidget {
                   style: Theme.of(context)
                       .textTheme
                       .subtitle
-                      .copyWith(color: Colors.white),
+                      .copyWith(color: Color.fromRGBO(130, 147, 153, 1)),
                 ),
               ),
             ],

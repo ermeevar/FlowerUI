@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
             body1: TextStyle(
                 fontSize: 15,
                 fontFamily: "SourceSansPro",
-                color: Color.fromRGBO(55, 50, 52, 1),
+                color: Colors.black,
                 decoration: TextDecoration.none),
             body2: TextStyle(
                 fontSize: 15,
