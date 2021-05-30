@@ -9,7 +9,7 @@ class RegistrationMainMenu extends StatefulWidget {
 }
 
 class RegistrationMainMenuState extends State<RegistrationMainMenu> {
-  Store _store= Store();
+  Store _store = Store();
   Account _account = Account();
 
   @override
@@ -30,136 +30,137 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
   //#region Content
   Center getContent(BuildContext context) {
     return Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Spacer(),
-              Text(
-                "Регистрация",
-                style: Theme.of(context).textTheme.title,
-              ),
-              getName(context),
-              getPhone(context),
-              getLogin(context),
-              getPassword(context),
-              signUp(context),
-              Spacer(),
-            ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          Text(
+            "Регистрация",
+            style: Theme.of(context).textTheme.title,
           ),
-        );
+          getName(context),
+          getPhone(context),
+          getLogin(context),
+          getPassword(context),
+          signUp(context),
+          Spacer(),
+        ],
+      ),
+    );
   }
 
   Container signUp(BuildContext context) {
     return Container(
-              padding: EdgeInsets.only(top: 50),
-              child: FlatButton(
-                  onPressed: () async {
-                    if(await ProfileManipulation.addStore(_account, _store) == true)
-                      Navigator.pop(context);
-                    else
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Произошла ошибка", style: Theme.of(context).textTheme.body2,),
-                          action: SnackBarAction(
-                            label: "Понятно",
-                            onPressed: () {
-                              // Code to execute.
-                            },
-                          ),
-                        ),
-                      );
-
-                  },
-                  padding: EdgeInsets.zero,
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 90),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(40))),
-                    child: new Text(
-                      "СОХРАНИТЬ",
-                      style: Theme.of(context).textTheme.body2.copyWith(
-                            color: Color.fromRGBO(110, 53, 76, 1),
-                          ),
-                    ),
-                  )),
-            );
+      padding: EdgeInsets.only(top: 50),
+      child: FlatButton(
+          onPressed: () async {
+            if (await ProfileManipulation.addStore(_account, _store) == true)
+              Navigator.pop(context);
+            else
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Произошла ошибка",
+                    style: Theme.of(context).textTheme.body2,
+                  ),
+                  action: SnackBarAction(
+                    label: "Понятно",
+                    onPressed: () {
+                      // Code to execute.
+                    },
+                  ),
+                ),
+              );
+          },
+          padding: EdgeInsets.zero,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 90),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(40))),
+            child: new Text(
+              "СОХРАНИТЬ",
+              style: Theme.of(context).textTheme.body2.copyWith(
+                    color: Color.fromRGBO(110, 53, 76, 1),
+                  ),
+            ),
+          )),
+    );
   }
 
   Padding getPassword(BuildContext context) {
     return Padding(
-              padding: EdgeInsets.only(right: 40, left: 40, top: 20),
-              child: TextFormField(
-                  onChanged: (password) {
-                    setState(() {
-                      this._account.passwordHash = password;
-                    });
-                  },
-                  cursorColor: Colors.white,
-                  style: Theme.of(context).textTheme.body2,
-                  decoration: InputDecoration(
-                    labelText: "Пароль",
-                    focusColor: Colors.white,
-                    fillColor: Colors.white,
-                  )),
-            );
+      padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+      child: TextFormField(
+          obscureText: true,
+          onChanged: (password) {
+            setState(() {
+              this._account.passwordHash = password;
+            });
+          },
+          cursorColor: Colors.white,
+          style: Theme.of(context).textTheme.body2,
+          decoration: InputDecoration(
+            labelText: "Пароль",
+            focusColor: Colors.white,
+            fillColor: Colors.white,
+          )),
+    );
   }
 
   Padding getLogin(BuildContext context) {
     return Padding(
-              padding: EdgeInsets.only(right: 40, left: 40, top: 20),
-              child: TextFormField(
-                  onChanged: (login) {
-                    setState(() {
-                      this._account.login = login;
-                    });
-                  },
-                  cursorColor: Colors.white,
-                  style: Theme.of(context).textTheme.body2,
-                  decoration: InputDecoration(
-                    labelText: "Логин",
-                    focusColor: Colors.white,
-                  )),
-            );
+      padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+      child: TextFormField(
+          onChanged: (login) {
+            setState(() {
+              this._account.login = login;
+            });
+          },
+          cursorColor: Colors.white,
+          style: Theme.of(context).textTheme.body2,
+          decoration: InputDecoration(
+            labelText: "Логин",
+            focusColor: Colors.white,
+          )),
+    );
   }
 
   Padding getPhone(BuildContext context) {
     return Padding(
-              padding: EdgeInsets.only(right: 40, left: 40, top: 20),
-              child: TextFormField(
-                  onChanged: (phone) {
-                    setState(() {
-                      this._store.firstPhone = phone;
-                    });
-                  },
-                  cursorColor: Colors.white,
-                  style: Theme.of(context).textTheme.body2,
-                  decoration: InputDecoration(
-                    labelText: "Телефон",
-                    focusColor: Colors.white,
-                  )),
-            );
+      padding: EdgeInsets.only(right: 40, left: 40, top: 20),
+      child: TextFormField(
+          onChanged: (phone) {
+            setState(() {
+              this._store.firstPhone = phone;
+            });
+          },
+          cursorColor: Colors.white,
+          style: Theme.of(context).textTheme.body2,
+          decoration: InputDecoration(
+            labelText: "Телефон",
+            focusColor: Colors.white,
+          )),
+    );
   }
 
   Padding getName(BuildContext context) {
     return Padding(
-              padding: EdgeInsets.only(right: 40, left: 40, top: 40),
-              child: TextFormField(
-                  onChanged: (name) {
-                    setState(() {
-                      this._store.name = name;
-                    });
-                  },
-                  cursorColor: Colors.white,
-                  style: Theme.of(context).textTheme.body2,
-                  decoration: InputDecoration(
-                    labelText: "Наименование сети",
-                    focusColor: Colors.white,
-                  )),
-            );
+      padding: EdgeInsets.only(right: 40, left: 40, top: 40),
+      child: TextFormField(
+          onChanged: (name) {
+            setState(() {
+              this._store.name = name;
+            });
+          },
+          cursorColor: Colors.white,
+          style: Theme.of(context).textTheme.body2,
+          decoration: InputDecoration(
+            labelText: "Наименование сети",
+            focusColor: Colors.white,
+          )),
+    );
   }
   //#endregion
 
