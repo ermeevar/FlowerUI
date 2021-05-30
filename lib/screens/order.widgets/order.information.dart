@@ -7,6 +7,8 @@ import 'package:flower_ui/states/web.api.services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class OrderInformation extends StatefulWidget {
   Order _order;
@@ -140,6 +142,16 @@ class OrderInformationState extends State<OrderInformation> {
                       ? _order.orderStatusId = _orderStatuses[index].id
                       : _order.orderStatusId = null;
                   WebApiServices.putOrder(_order);
+
+                  showTopSnackBar(
+                    context,
+                    CustomSnackBar.info(
+                      icon: null,
+                      backgroundColor: Color.fromRGBO(110, 53, 76, 1),
+                      message:
+                      "Статус изменен",
+                    ),
+                  );
                 });
               },
             ),

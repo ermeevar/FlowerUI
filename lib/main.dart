@@ -18,6 +18,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+          snackBarTheme: SnackBarThemeData(
+            backgroundColor: Color.fromRGBO(110, 53, 76, 1),
+            actionTextColor: Colors.white,
+          ),
           textTheme: TextTheme(
             body1: TextStyle(
                 fontSize: 15,
