@@ -53,11 +53,9 @@ class OrderMainMenuState extends State<OrderMainMenu> {
         padding: EdgeInsets.zero,
         children: [
           OrderInformation(order),
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.only(top: 30),
-              child: OrderBouquetContent(order),
-            ),
+          Container(
+            padding: EdgeInsets.only(top: 30),
+            child: OrderBouquetContent(order),
           ),
         ],
       ),

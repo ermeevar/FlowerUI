@@ -37,7 +37,7 @@ class StoreInformationState extends State<StoreInformation>
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           new CircleAvatar(
-            radius: 70,
+            radius: 60,
             backgroundImage: NetworkImage(
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
             backgroundColor: Colors.transparent,
@@ -59,19 +59,19 @@ class StoreInformationState extends State<StoreInformation>
                   ? Text(ProfileManipulation.store.secondPhone,
                       style: Theme.of(context).textTheme.body2)
                   : Text(""),
-              new FlatButton(
-                  onPressed: () {
-                    _taped();
-                  },
-                  padding: EdgeInsets.zero,
-                  child: new Text("Изменить",
-                      style: new TextStyle(
-                          height: 2,
-                          fontSize: 19,
-                          fontFamily: "SourceSansPro",
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          decoration: TextDecoration.none))),
+              FlatButton(
+                onPressed: () {
+                  _taped();
+                },
+                padding: EdgeInsets.zero,
+                child: new Text(
+                  "Изменить",
+                  style: Theme.of(context)
+                      .textTheme
+                      .body2
+                      .copyWith(fontWeight: FontWeight.bold, height: 2),
+                ),
+              ),
             ],
           )
         ],

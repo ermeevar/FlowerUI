@@ -17,7 +17,9 @@ class ShopMainMenu extends StatelessWidget {
         child: Column(
           children: [
             getTitle(context),
-            ShopContent(_shop),
+            Expanded(
+              child: ShopContent(_shop),
+            ),
           ],
         ),
       ),
@@ -28,34 +30,30 @@ class ShopMainMenu extends StatelessWidget {
   Container getTitle(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(right: 25, left: 10),
-      child: Expanded(
-        child: Container(
-          padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
-          alignment: Alignment.topLeft,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 30,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  color: Color.fromRGBO(130, 147, 153, 1),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
+      child: Container(
+        padding: EdgeInsets.only(top: 20, bottom: 10, right: 20, left: 0),
+        alignment: Alignment.topLeft,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 30,
+              child: IconButton(
+                icon: Icon(Icons.arrow_back_ios),
+                color: Color.fromRGBO(130, 147, 153, 1),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              Expanded(
-                child: Text(
-                  _shop.address,
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle
-                      .copyWith(color: Color.fromRGBO(130, 147, 153, 1)),
-                ),
-              ),
-            ],
-          ),
+            ),
+            Text(
+              _shop.address,
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle
+                  .copyWith(color: Color.fromRGBO(130, 147, 153, 1)),
+            ),
+          ],
         ),
       ),
     );

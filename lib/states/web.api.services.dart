@@ -15,10 +15,10 @@ class WebApiServices {
   static Dio dio = Dio();
 
   //#region Server
-  static String _androidEmulatorLoopback = "10.0.2.2";
+  static String _androidEmulatorLoopback = "185.246.67.169";
   static String _localhost = "localhost";
-  static String _port = "5001";
-  static String _baseUrl = "https://$_androidEmulatorLoopback:$_port";
+  static String _port = "5004";
+  static String _baseUrl = "http://$_androidEmulatorLoopback:$_port";
   //#endregion
 
   //#region URL's

@@ -64,15 +64,13 @@ class ShopContentState extends State<ShopContent>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: DefaultTabController(
-        length: 1,
-        child: Scaffold(
-          body: Container(
-            color: Colors.white,
-            padding: EdgeInsets.only(left: 20, right: 20),
-            child: _ordersContent(context),
-          ),
+    return DefaultTabController(
+      length: 1,
+      child: Scaffold(
+        body: Container(
+          color: Colors.white,
+          padding: EdgeInsets.only(left: 20, right: 20),
+          child: _ordersContent(context),
         ),
       ),
     );
@@ -82,14 +80,12 @@ class ShopContentState extends State<ShopContent>
     return _orderStatuses.firstWhere((element) => element.id == orderStatusId);
   }
 
-  Scaffold _ordersContent(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.white,
-        child: _orders.length == 0
-            ? showNullOrderError(context)
-            : _buildOrderList(),
-      ),
+  Widget _ordersContent(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: _orders.length == 0
+          ? showNullOrderError(context)
+          : _buildOrderList(),
     );
   }
 

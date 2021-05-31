@@ -105,10 +105,11 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu>
               return;
             }
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StoreMainMenu()),
-            );
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (context) => StoreMainMenu(),
+                ),
+                    (Route<dynamic> route) => false);
           },
           padding: EdgeInsets.zero,
           child: Container(

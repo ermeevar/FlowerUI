@@ -30,7 +30,7 @@ class StoreContentState extends State<StoreContent>
     _getProducts();
   }
 
-  Future<void> _refresh()async{
+  Future<void> _refresh() async {
     setState(() {
       _getShops();
       _getProductCategories();
@@ -129,12 +129,11 @@ class StoreContentState extends State<StoreContent>
     return Scaffold(
       floatingActionButton: getAddButton(context),
       body: Container(
-          color: Colors.white,
-          child: Expanded(
-            child: _shops.length == 0
-                ? showNullShopsError(context)
-                : buildShopList(),
-          )),
+        color: Colors.white,
+        child: _shops.length == 0
+            ? showNullShopsError(context)
+            : buildShopList(),
+      ),
     );
   }
 
@@ -150,11 +149,11 @@ class StoreContentState extends State<StoreContent>
             return index + 1 == _shops.length + 1
                 ? getSpaceContainer()
                 : ListTile(
-              contentPadding: EdgeInsets.symmetric(vertical: 10),
-              title: Text(_shops[index].address,
-                  style: Theme.of(context).textTheme.body1),
-              trailing: getShopMenuButton(index),
-            );
+                    contentPadding: EdgeInsets.symmetric(vertical: 10),
+                    title: Text(_shops[index].address,
+                        style: Theme.of(context).textTheme.body1),
+                    trailing: getShopMenuButton(index),
+                  );
           }),
     );
   }
