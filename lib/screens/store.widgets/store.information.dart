@@ -1,6 +1,8 @@
+import 'package:flower_ui/states/image.controller.dart';
 import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/states/web.api.services.dart';
 import 'package:flower_ui/screens/authorization.widgets/authorization.main.menu.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -36,13 +38,8 @@ class StoreInformationState extends State<StoreInformation>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          new CircleAvatar(
-            radius: 60,
-            backgroundImage: NetworkImage(
-                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-            backgroundColor: Colors.transparent,
-          ),
-          new Column(
+          _getImage(),
+          Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -91,18 +88,14 @@ class StoreInformationState extends State<StoreInformation>
               IconButton(
                   icon: Icon(Icons.arrow_back_ios),
                   color: Colors.white,
-                  onPressed: () {
+                  onPressed: () async {
+                    await ProfileManipulation.searchProfile();
                     _taped();
                   }),
               getProfileNavigationButton(),
             ],
           ),
-          CircleAvatar(
-            radius: 50,
-            backgroundImage: NetworkImage(
-                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-            backgroundColor: Colors.transparent,
-          ),
+          getProfileImage(),
           getName(context),
           getFirstPhone(context),
           getSecondPhone(context),
@@ -112,12 +105,48 @@ class StoreInformationState extends State<StoreInformation>
     );
   }
 
+  GestureDetector getProfileImage() {
+    return GestureDetector(
+      onTap: () async {
+        await showOptionsForPhoto(context);
+      },
+      child: _getImage(),
+    );
+  }
+
+  Card _getImage() {
+    return Card(
+      elevation: 0,
+      shape: CircleBorder(),
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 50,
+        child: ProfileManipulation.store.picture == null
+            ? Icon(
+                Icons.supervisor_account_outlined,
+                color: Colors.black38,
+                size: 50,
+              )
+            : ClipOval(
+                child: Image(
+                  image: MemoryImage(ProfileManipulation.store.picture),
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+      ),
+    );
+  }
+
   Container save(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: FlatButton(
-        onPressed: () {
+        onPressed: () async {
           _taped();
+          await WebApiServices.putStore(ProfileManipulation.store);
+          await ProfileManipulation.searchProfile();
         },
         padding: EdgeInsets.zero,
         child: Container(
@@ -264,6 +293,46 @@ class StoreInformationState extends State<StoreInformation>
       context,
       MaterialPageRoute<void>(
         builder: (BuildContext context) => AuthorizationMainMenu(),
+      ),
+    );
+  }
+
+  Future showOptionsForPhoto(context) async {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            child: Text(
+              'Выбрать из галереи',
+              style: Theme.of(context).textTheme.body1,
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              var pickedImage = await ImageController.getImageFromGallery();
+              if (pickedImage != null) {
+                setState(() {
+                  ProfileManipulation.store.picture = pickedImage;
+                });
+              }
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: Text(
+              'Камера',
+              style: Theme.of(context).textTheme.body1,
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              var pickedImage = await ImageController.getImageFromCamera();
+              if (pickedImage != null) {
+                setState(() {
+                  ProfileManipulation.store.picture = pickedImage;
+                });
+              }
+            },
+          ),
+        ],
       ),
     );
   }

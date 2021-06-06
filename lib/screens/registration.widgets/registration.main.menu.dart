@@ -55,7 +55,7 @@ class RegistrationMainMenuState extends State<RegistrationMainMenu> {
       padding: EdgeInsets.only(top: 50),
       child: FlatButton(
           onPressed: () async {
-            if (await ProfileManipulation.addStore(_account, _store) == true)
+            if (await ProfileManipulation.addStoreConfig(_account, _store) == true)
               Navigator.pop(context);
             else
               ScaffoldMessenger.of(context).showSnackBar(

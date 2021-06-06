@@ -29,7 +29,7 @@ class ProfileManipulation {
       return null;
   }
 
-  static Future<Store> getStore(Account account) async {
+  static Future<Store> getStoreConfig(Account account) async {
     Account accountBD = await _getAccount(account);
 
     if (accountBD == null) return null;
@@ -51,7 +51,7 @@ class ProfileManipulation {
     return store;
   }
 
-  static Future<bool> addStore(Account account, Store store) async {
+  static Future<bool> addStoreConfig(Account account, Store store) async {
     final crypto = Crypt.sha256(account.passwordHash);
     account.passwordHash = crypto.hash;
     account.salt = crypto.salt;
@@ -83,14 +83,14 @@ class ProfileManipulation {
 
     await WebApiServices.fetchAccounts().then((response) {
       var accountData = accountFromJson(response.data);
-      ProfileManipulation.account = accountData
+      account = accountData
           .firstWhere((element) => element.id == prefs.getInt('AccountId'));
       print(ProfileManipulation.account.id);
     });
 
     await WebApiServices.fetchStores().then((response) {
       var storeData = storeFromJson(response.data);
-      ProfileManipulation.store = storeData
+      store = storeData
           .firstWhere((element) => element.id == prefs.getInt('StoreId'));
     });
   }

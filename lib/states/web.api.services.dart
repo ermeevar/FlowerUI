@@ -16,7 +16,6 @@ class WebApiServices {
 
   //#region Server
   static String _androidEmulatorLoopback = "185.246.67.169";
-  static String _localhost = "localhost";
   static String _port = "5004";
   static String _baseUrl = "http://$_androidEmulatorLoopback:$_port";
   //#endregion

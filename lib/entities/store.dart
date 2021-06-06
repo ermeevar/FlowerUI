@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:ffi';
+import 'dart:typed_data';
 
 List<Store> storeFromJson(String str) => List<Store>.from(json.decode(str).map((x) => Store.fromJson(x)));
 
@@ -18,7 +19,7 @@ class Store {
   int id;
   String name;
   String description;
-  List<int> picture;
+  Uint8List picture;
   String firstPhone;
   String secondPhone;
   int accountId;
@@ -27,7 +28,7 @@ class Store {
     id: json["id"],
     name: json["name"],
     description: json["description"],
-    picture: json["picture"],
+    picture: json["picture"] != null? base64.decode(json["picture"]) : json["picture"],
     firstPhone: json["firstPhone"],
     secondPhone: json["secondPhone"],
     accountId: json["accountId"],
@@ -46,7 +47,7 @@ class Store {
     "id": id,
     "name": name,
     "description": description.toString(),
-    "picture": picture.toList(),
+    "picture": picture != null? base64.encode(picture) : null,
     "firstPhone": firstPhone,
     "secondPhone": secondPhone,
     "accountId": accountId,

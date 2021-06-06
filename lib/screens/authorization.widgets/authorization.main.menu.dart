@@ -85,7 +85,7 @@ class AuthorizationMainMenuState extends State<AuthorizationMainMenu>
       padding: EdgeInsets.only(top: 80),
       child: FlatButton(
           onPressed: () async {
-            Store accStore = await ProfileManipulation.getStore(_account);
+            Store accStore = await ProfileManipulation.getStoreConfig(_account);
 
             if (accStore == null) {
               ScaffoldMessenger.of(context).showSnackBar(
