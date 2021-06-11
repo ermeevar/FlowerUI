@@ -3,6 +3,7 @@ import 'package:flower_ui/entities/order.status.dart';
 import 'package:flower_ui/entities/shop.dart';
 import 'package:flower_ui/states/calc.dart';
 import 'package:flower_ui/states/divider.dart';
+import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/states/web.api.services.dart';
 import 'package:flower_ui/screens/order.widgets/order.main.menu.dart';
 import 'package:flutter/cupertino.dart';
@@ -117,12 +118,6 @@ class ShopContentState extends State<ShopContent>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundImage: NetworkImage(
-                          'https://www.meme-arsenal.com/memes/70c29cb4ca092108a7b2084a24af52f6.jpg'),
-                      backgroundColor: Colors.transparent,
-                    ),
                     getOrderValueContent(index, context),
                   ],
                 ),
@@ -137,7 +132,7 @@ class ShopContentState extends State<ShopContent>
   Expanded getOrderValueContent(int index, BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: EdgeInsets.only(left: 20),
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

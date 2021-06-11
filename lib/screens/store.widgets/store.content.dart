@@ -1,6 +1,7 @@
 import 'package:flower_ui/entities/product.category.dart';
 import 'package:flower_ui/screens/store.widgets/store.main.menu.dart';
 import 'package:flower_ui/states/divider.dart';
+import 'package:flower_ui/states/image.controller.dart';
 import 'package:flower_ui/states/profile.manipulation.dart';
 import 'package:flower_ui/entities/shop.dart';
 import 'package:flower_ui/states/spaceContainer.dart';
@@ -130,9 +131,8 @@ class StoreContentState extends State<StoreContent>
       floatingActionButton: getAddButton(context),
       body: Container(
         color: Colors.white,
-        child: _shops.length == 0
-            ? showNullShopsError(context)
-            : buildShopList(),
+        child:
+            _shops.length == 0 ? showNullShopsError(context) : buildShopList(),
       ),
     );
   }
@@ -417,25 +417,35 @@ class StoreContentState extends State<StoreContent>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _products[index].picture == null
-              ? Container(
-                  width: 50,
-                  height: 50,
-                  child: Icon(
-                    Icons.image_not_supported,
-                    color: Color.fromRGBO(130, 147, 153, 1),
-                    size: 30,
-                  ),
-                )
-              : CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                      'https://i.pinimg.com/originals/8a/eb/d8/8aebd875fbddd22bf3971c3a7159bdc7.png'),
-                  backgroundColor: Colors.transparent,
-                ),
+          _getImage(_products[index]),
           getProductValueInfo(index, context),
           getProductMenuButton(index)
         ],
+      ),
+    );
+  }
+
+  Card _getImage(Product product) {
+    return Card(
+      elevation: 0,
+      shape: CircleBorder(),
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 25,
+        child: product.picture == null
+            ? Icon(
+                Icons.image_not_supported,
+                color: Colors.black38,
+                size: 25,
+              )
+            : ClipOval(
+                child: Image(
+                  image: MemoryImage(product.picture),
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                ),
+              ),
       ),
     );
   }
@@ -544,6 +554,55 @@ class StoreContentState extends State<StoreContent>
     );
   }
 
+  Future showOptionsForPhoto(context) async {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) => CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            child: Text(
+              'Выбрать из галереи',
+              style: Theme.of(context).textTheme.body1,
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              var pickedImage = await ImageController.getImageFromGallery();
+              if (pickedImage != null) {
+                setState(() {
+                  _product.picture = pickedImage;
+                });
+              }
+            },
+          ),
+          CupertinoActionSheetAction(
+            child: Text(
+              'Камера',
+              style: Theme.of(context).textTheme.body1,
+            ),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              var pickedImage = await ImageController.getImageFromCamera();
+              if (pickedImage != null) {
+                setState(() {
+                  _product.picture = pickedImage;
+                });
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector getProfileImage(context) {
+    return GestureDetector(
+      onTap: () async {
+        await showOptionsForPhoto(context);
+      },
+      child: _getImage(_product),
+    );
+  }
+
   Widget _productBottomSheet(context) {
     return Container(
       height: 420,
@@ -555,12 +614,9 @@ class StoreContentState extends State<StoreContent>
             child: Wrap(
               children: [
                 Center(
-                  child: Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: Colors.white,
-                    ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: getProfileImage(context),
                   ),
                 ),
                 Center(
