@@ -27,7 +27,7 @@ class Template {
     templateCategoryId: json["templateCategoryId"],
     storeId: json["storeId"],
     picture: json["picture"],
-    cost: json["cost"].toDouble(),
+    cost: double.parse((json["cost"] as num).toStringAsFixed(2)),
   );
 
   Map<String, dynamic> toJson() => {

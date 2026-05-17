@@ -156,10 +156,20 @@ class OrderBouquetContentState extends State<OrderBouquetContent> {
           child: CircleAvatar(
             radius: 60,
             backgroundColor: Colors.black12,
-            child: Icon(
-              Icons.image_not_supported_outlined,
-              color: Color.fromRGBO(110, 53, 76, 1),
-            ),
+            child: _products[index].picture == null
+              ? Icon(
+                Icons.image_not_supported,
+                color: Colors.black38,
+                size: 25,
+              )
+              : ClipOval(
+                child: Image(
+                  image: MemoryImage(_products[index].picture),
+                  width: 130,
+                  height: 130,
+                  fit: BoxFit.cover,
+                ),
+              ),
           ),
         ),
         Container(

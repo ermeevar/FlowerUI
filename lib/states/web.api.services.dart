@@ -15,9 +15,9 @@ class WebApiServices {
   static Dio dio = Dio();
 
   //#region Server
-  static String _androidEmulatorLoopback = "185.246.67.169";
-  static String _port = "5004";
-  static String _baseUrl = "http://$_androidEmulatorLoopback:$_port";
+  static String _androidEmulatorLoopback = "localhost";
+  static String _port = "5001";
+  static String _baseUrl = "https://$_androidEmulatorLoopback:$_port";
   //#endregion
 
   //#region URL's
@@ -37,7 +37,7 @@ class WebApiServices {
 
   WebApiServices() {
     dio.interceptors.add(
-        DioCacheManager(CacheConfig(baseUrl: "https://10.0.2.2")).interceptor);
+        DioCacheManager(CacheConfig(baseUrl: "https://localhost:5001")).interceptor);
   }
 
   static Map<String, String> header = {
